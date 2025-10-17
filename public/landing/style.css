@@ -376,7 +376,7 @@ body {
 
 .f_title {
     display: block;
-    font-family: 'Raleway', sans-serif;
+    font-family: 'inter', sans-serif;
     color: #006989;
     font-weight: 700;
     font-size: 3rem;
@@ -392,4 +392,299 @@ body {
     margin-top: 15px;
     margin-left: auto;
     margin-right: 50px;
+}
+
+.ft-card-container {
+    display: flex;
+    flex-wrap: wrap;
+    padding: 20px;
+    gap: 20px;
+    justify-content: center;
+}
+
+.ft-card {
+    color: white;
+    font-size: .9em;
+    background: #006989;
+    border-radius: 30px;
+    border: #000000 5px solid;
+    padding: 10px;
+    width: 200px;
+    transition: all 0.3s ease;
+    text-align: left;
+}
+
+.ft-card img {
+    width: 200px;
+    height: 200px;
+    border-radius: 15px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+
+}
+
+.ft-desc {
+    color: #aeccda;
+    font-size: 1em;
+    line-height: 1.4;
+    margin-top: 10px;
+    text-align: left;
+}
+
+.divider2 {
+    width: 50%;
+    height: 4px;
+    background-color: #e8e8e8;
+    opacity: 0.8;
+    margin-top: 15px;
+    margin-left: 50px;
+    margin-right: auto;
+}
+
+.start-creating-btn {
+    display: flex;
+    align-items: center;
+    width: 266px;
+    height: 71px;
+    text-decoration: none;
+    cursor: pointer;
+    background: #006989;
+    border-radius: 43px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    font-family: 'Inter', sans-serif;
+    font-weight: 500;
+    color: #FFFFFF;
+    margin-right: 50px;
+    margin-left: auto;
+}
+
+.btn-icon-area {
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 64px;
+    height: 64px;
+    margin-left: 4px;
+    background: #B2DCE7;
+    border: 3px solid #FFFFFF;
+    border-radius: 43px 43px 0px 43px;
+}
+
+.btn-arrow-icon {
+    width: 24px;
+    height: 24px;
+    background: url('/public/assets/images/right-white.png') no-repeat center center / contain;
+}
+
+.btn-text {
+    margin-left: 14px;
+    flex-grow: 1;
+    font-size: 22px;
+    line-height: 27px;
+    color: #FFFFFF;
+    white-space: nowrap;
+}
+
+.start-creating-btn:hover {
+    background: #0087b3;
+    transform: translateY(-1px);
+}
+
+.why-choose {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+    height: 800px;
+    margin-top: 15px;
+    border-radius: 20px;
+    border: 5px solid black;
+    background-color: var(--color-white);
+    box-sizing: border-box;
+    gap: 10px;
+    position: relative;
+    overflow: hidden;
+}
+
+.why-text {
+    margin-top: 30px;
+    color: #006989;
+    font-size: 2.5em;
+    font-weight: 700;
+}
+
+.why-text span {
+    color: #000000;
+    text-shadow: #0000005b 2px 2px 15px;
+}
+
+.imagine {
+    margin-top: -20px;
+    color: rgba(81, 81, 81, 0.67);
+    font-weight: 800;
+}
+
+/* paper stays at back */
+.paper-bg {
+    display: block;
+    position: relative;
+    width: 60%;
+    margin: 50px auto 0;
+    z-index: 1;
+}
+
+/* dashed line in between cards */
+.dashed-lines {
+    position: absolute;
+    top: 60%;
+    /* fine-tune for perfect alignment */
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 30%;
+    z-index: 1.5;
+    /* between paper and cards */
+    opacity: 0.8;
+    pointer-events: none;
+}
+
+/* cards on top */
+.pin-cards {
+    position: absolute;
+    top: 60%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+    width: 50%;
+    z-index: 2;
+}
+
+.pin-cards img {
+    width: 100%;
+    height: auto;
+    border-radius: 20px;
+    transition: transform 0.3s ease;
+}
+
+.pin-cards img:hover {
+    transform: translateY(-8px);
+}
+
+.marquee-container {
+    width: auto;
+    height: 35px;
+    align-items: center;
+    overflow: hidden;
+    background: #f8f8f8;
+    margin-top: 15px;
+    border-radius: 20px;
+    border: 5px solid black;
+    padding: 10px 0;
+    box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.05);
+}
+
+.marquee {
+    display: flex;
+    width: max-content;
+    animation: scroll 25s linear infinite;
+}
+
+.marquee span {
+    font-family: 'inter', sans-serif;
+    font-weight: 1000;
+    color: #006989;
+    font-size: 1.5rem;
+    white-space: nowrap;
+    padding-right: 3rem;
+    letter-spacing: 1px;
+}
+
+/* Animation */
+@keyframes scroll {
+    0% {
+        transform: translateX(0);
+    }
+
+    100% {
+        transform: translateX(-50%);
+    }
+}
+
+.footer_sec {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    width: 100%;
+    height: 810px;
+    margin-top: 15px;
+    border-top: 5px solid black;
+    border-left: 5px solid black;
+    border-right: 5px solid black;
+    border-bottom: none;
+    /* Remove bottom border */
+    border-radius: 50px 50px 0 0;
+    /* Keep top corners rounded */
+    background-color: white;
+    box-sizing: border-box;
+    padding: 30px;
+    padding-bottom: 0;
+    /* Remove bottom gap */
+    color: var(--color-secondary);
+}
+
+.cta_container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 350px;
+    border-radius: 50px;
+    background-image: url('/public/assets/images/cta_bg.png');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    display: flex;
+    padding-bottom: 20px;
+}
+
+.cta_container h1 {
+    color: rgb(22, 22, 22);
+    font-size: 3em;
+    text-shadow: #00000067 2px 2px 15px;
+    text-align: left;
+    padding: 40px 0 0 40px;
+    z-index: 2;
+}
+
+.cta_container p {
+    color: rgb(61, 61, 61);
+    text-align: left;
+    padding: 0 0 0 40px;
+}
+
+.try-btn {
+    width: fit-content;
+    padding: 20px;
+    background-image: linear-gradient(to bottom, #ffffff 0%, #ffefe0 100%);
+    color: rgb(53, 53, 53);
+    text-decoration: none;
+    font-size: 1.5em;
+    font-weight: 1000;
+    margin-left: 60%;
+    box-shadow: #00000067;
+    border-radius: 30px;
+    transition: background-color 0.3s, transform 0.3s;
+}
+
+.footer {
+    margin-top: 40px;
+    font-family: 'inter', sans-serif;
+    background-color: black;
+    color: white;
+    border-radius: 50px 50px 0 0;
+    height: 450px;
+    width: 100%;
 }
