@@ -4,12 +4,23 @@ const User = require("../models/user");
 
 // Create a new user
 router.post("/", async (req, res) => {
+  console.log('Received signup request:', req.body); // Debug log
   const { name, email, password } = req.body;
+  
+  // Check if required fields are present
+  if (!name || !email || !password) {
+    console.log('Missing required fields'); // Debug log
+    return res.status(400).json({ error: 'Name, email, and password are required' });
+  }
+  
   try {
     const newUser = new User({ name, email, password });
+    console.log('Creating new user:', newUser); // Debug log
     await newUser.save();
+    console.log('User created successfully:', newUser); // Debug log
     res.status(201).json(newUser);
   } catch (error) {
+    console.log('Error creating user:', error); // Debug log
     res.status(400).json({ error: error.message });
   }
 });

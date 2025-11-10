@@ -152,7 +152,7 @@ body {
     padding: 40px 0;
     width: 50%;
     height: 100%;
-    background-image: url("/public/assets/images/bgimage.png");
+    background-image: url("../assets/images/bgimage.png");
     background-size: cover;
     background-position: center;
 }
@@ -200,7 +200,7 @@ body {
 .hero-right {
     width: 50%;
     height: 100%;
-    background-image: url("/public/assets/images/hero-right-bg.png");
+    background-image: url("../assets/images/hero-right-bg.png");
     background-size: cover;
     background-position: center;
 }
@@ -723,7 +723,7 @@ body {
 .btn-arrow-icon {
     width: 24px;
     height: 24px;
-    background: url("/public/assets/images/right-white.png") no-repeat center center / contain;
+    background: url("../assets/images/right-white.png") no-repeat center center / contain;
 }
 
 .btn-text {
@@ -936,7 +936,7 @@ body {
     height: 350px;
     border: 5px solid black;
     border-radius: 50px;
-    background-image: url("/public/assets/images/cta_bg.jpg");
+    background-image: url("../assets/images/cta_bg.jpg");
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
