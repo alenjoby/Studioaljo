@@ -1,13 +1,44 @@
-module.exports = (req, res, next) => {
-    const auth = { login: 'admin', password: 'admin' }; // Change this to a secure method
+// Fixed admin credentials
+const ADMIN_CREDENTIALS = {
+  username: process.env.ADMIN_USERNAME || "admin",
+  password: process.env.ADMIN_PASSWORD || "iamtheadmin",
+};
 
-    const b64auth = (req.headers.authorization || '').split(' ')[1] || '';
-    const [login, password] = Buffer.from(b64auth, 'base64').toString().split(':');
+// Simple token storage (in production, use proper session management or JWT)
+const activeSessions = new Set();
 
-    if (login && password && login === auth.login && password === auth.password) {
-        return next();
-    }
+// Generate simple session token
+function generateToken() {
+  return Math.random().toString(36).substring(2) + Date.now().toString(36);
+}
 
-    res.set('WWW-Authenticate', 'Basic realm="401"');
-    res.status(401).send('Authentication required.');
+// Verify admin credentials
+function verifyAdmin(username, password) {
+  return (
+    username === ADMIN_CREDENTIALS.username &&
+    password === ADMIN_CREDENTIALS.password
+  );
+}
+
+// Middleware to check if user is authenticated
+function requireAuth(req, res, next) {
+  const token =
+    req.headers.authorization?.replace("Bearer ", "") ||
+    req.query.token ||
+    (req.body && req.body.token);
+
+  if (token && activeSessions.has(token)) {
+    req.adminToken = token;
+    return next();
+  }
+
+  res.status(401).json({ error: "Authentication required" });
+}
+
+module.exports = {
+  requireAuth,
+  verifyAdmin,
+  generateToken,
+  activeSessions,
+  ADMIN_CREDENTIALS,
 };

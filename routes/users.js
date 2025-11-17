@@ -4,24 +4,51 @@ const User = require("../models/user");
 
 // Create a new user
 router.post("/", async (req, res) => {
-  console.log('Received signup request:', req.body); // Debug log
+  console.log("Received signup request:", req.body); // Debug log
   const { name, email, password } = req.body;
-  
+
   // Check if required fields are present
   if (!name || !email || !password) {
-    console.log('Missing required fields'); // Debug log
-    return res.status(400).json({ error: 'Name, email, and password are required' });
+    console.log("Missing required fields"); // Debug log
+    return res
+      .status(400)
+      .json({ error: "Name, email, and password are required" });
   }
-  
+
+  // Validate email format
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  if (!emailRegex.test(email)) {
+    return res.status(400).json({ error: "Invalid email format" });
+  }
+
+  // Validate password length
+  if (password.length < 6) {
+    return res
+      .status(400)
+      .json({ error: "Password must be at least 6 characters long" });
+  }
+
   try {
+    // Check if user already exists
+    const existingUser = await User.findOne({ email });
+    if (existingUser) {
+      return res
+        .status(400)
+        .json({ error: "User with this email already exists" });
+    }
+
     const newUser = new User({ name, email, password });
-    console.log('Creating new user:', newUser); // Debug log
+    console.log("Creating new user:", newUser); // Debug log
     await newUser.save();
-    console.log('User created successfully:', newUser); // Debug log
+    console.log("User created successfully:", newUser); // Debug log
     res.status(201).json(newUser);
   } catch (error) {
-    console.log('Error creating user:', error); // Debug log
-    res.status(400).json({ error: error.message });
+    console.log("Error creating user:", error); // Debug log
+    if (error.code === 11000) {
+      res.status(400).json({ error: "User with this email already exists" });
+    } else {
+      res.status(400).json({ error: error.message });
+    }
   }
 });
 

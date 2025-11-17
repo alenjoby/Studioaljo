@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin Login - Studioaljo</title>
+    <link rel="stylesheet" href="../style.css" />
+  </head>
+  <body>
+    <div class="auth-container">
+      <div class="logo">
+        <img src="../assets/images/logo white.png" alt="Studioaljo Logo" />
+      </div>
+
+      <div class="form-container">
+        <h2>Admin Login</h2>
+        <p>Access the admin dashboard</p>
+        <form id="adminLoginForm">
+          <div class="input-group">
+            <input
+              type="text"
+              id="adminUsername"
+              placeholder="Username"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <input
+              type="password"
+              id="adminPassword"
+              placeholder="Password"
+              required
+            />
+          </div>
+          <button type="submit" class="submit-btn">Login</button>
+        </form>
+        <p id="errorMessage" class="error-message"></p>
+      </div>
+    </div>
+    <script src="login-script.js"></script>
+  </body>
+</html>

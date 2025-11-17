@@ -1,62 +1,87 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Studioaljo - Login or Sign Up</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
     <div class="auth-container">
-        <div class="logo">
-            <img src="assets/images/logo white.png" alt="Studioaljo Logo" />
-        </div>
-        
-        <div class="auth-tabs">
-            <button class="tab-btn active" id="loginTab">Login</button>
-            <button class="tab-btn" id="signupTab">Sign Up</button>
-        </div>
+      <div class="logo">
+        <img src="assets/images/logo white.png" alt="Studioaljo Logo" />
+      </div>
 
-        <!-- Login Form -->
-        <div class="form-container" id="loginFormContainer">
-            <h2>Welcome Back</h2>
-            <p>Login to your Studioaljo account</p>
-            <form id="loginForm">
-                <div class="input-group">
-                    <input type="email" id="email" placeholder="Email" required>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="password" placeholder="Password" required>
-                </div>
-                <button type="submit" class="submit-btn">Login</button>
-            </form>
-            <p class="switch-text">Don't have an account? <a href="#" id="switchToSignup">Sign Up</a></p>
-            <p id="loginErrorMessage" class="error-message"></p>
-        </div>
+      <div class="auth-tabs">
+        <button class="tab-btn active" id="loginTab">Login</button>
+        <button class="tab-btn" id="signupTab">Sign Up</button>
+      </div>
 
-        <!-- Signup Form -->
-        <div class="form-container hidden" id="signupFormContainer">
-            <h2>Create Account</h2>
-            <p>Join Studioaljo to start creating magic</p>
-            <form id="signupForm">
-                <div class="input-group">
-                    <input type="text" id="signupName" placeholder="Full Name" required>
-                </div>
-                <div class="input-group">
-                    <input type="email" id="signupEmail" placeholder="Email" required>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="signupPassword" placeholder="Password" required>
-                </div>
-                <div class="input-group">
-                    <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
-                </div>
-                <button type="submit" class="submit-btn">Sign Up</button>
-            </form>
-            <p class="switch-text">Already have an account? <a href="#" id="switchToLogin">Login</a></p>
-            <p id="signupErrorMessage" class="error-message"></p>
-        </div>
+      <!-- Login Form -->
+      <div class="form-container" id="loginFormContainer">
+        <h2>Welcome Back</h2>
+        <p>Login to your Studioaljo account</p>
+        <form id="loginForm">
+          <div class="input-group">
+            <input type="email" id="email" placeholder="Email" required />
+          </div>
+          <div class="input-group">
+            <input
+              type="password"
+              id="password"
+              placeholder="Password"
+              required
+            />
+          </div>
+          <button type="submit" class="submit-btn">Login</button>
+        </form>
+        <p class="switch-text">
+          Don't have an account? <a href="#" id="switchToSignup">Sign Up</a>
+        </p>
+        <p id="loginErrorMessage" class="error-message"></p>
+      </div>
+
+      <!-- Signup Form -->
+      <div class="form-container hidden" id="signupFormContainer">
+        <h2>Create Account</h2>
+        <p>Join Studioaljo to start creating magic</p>
+        <form id="signupForm">
+          <div class="input-group">
+            <input
+              type="text"
+              id="signupName"
+              placeholder="Full Name"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <input type="email" id="signupEmail" placeholder="Email" required />
+          </div>
+          <div class="input-group">
+            <input
+              type="password"
+              id="signupPassword"
+              placeholder="Password"
+              required
+            />
+          </div>
+          <div class="input-group">
+            <input
+              type="password"
+              id="confirmPassword"
+              placeholder="Confirm Password"
+              required
+            />
+          </div>
+          <button type="submit" class="submit-btn">Sign Up</button>
+        </form>
+        <p class="switch-text">
+          Already have an account? <a href="#" id="switchToLogin">Login</a>
+        </p>
+        <p id="signupErrorMessage" class="error-message"></p>
+      </div>
     </div>
+    <script src="admin-shortcut.js"></script>
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
