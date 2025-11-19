@@ -1,0 +1,343 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap");
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: "Josefin Sans", -apple-system, BlinkMacSystemFont, sans-serif;
+    background: #000000;
+    color: #ffffff;
+    min-height: 100vh;
+}
+
+/* Main Dashboard Container */
+.DASHBOARD {
+    width: 100%;
+    min-height: 100vh;
+    background: #000000;
+    display: grid;
+    grid-template-columns: 180px 1fr 180px;
+    grid-template-rows: auto auto 1fr auto;
+    gap: 16px;
+    padding: 50px 32px 32px;
+    position: relative;
+}
+
+/* Header */
+header {
+    grid-column: 1 / -1;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0;
+    margin-bottom: 8px;
+}
+
+.back-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid #ff6b00;
+    background: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    padding: 0;
+    transition: all 0.3s ease;
+    margin-top: -40px;
+}
+
+.back-btn:hover {
+    background: rgba(255, 107, 0, 0.1);
+    transform: scale(1.05);
+}
+
+.back-btn img {
+    width: 18px;
+    height: 18px;
+}
+
+.dashboard-logo {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    height: 50px;
+    width: auto;
+    margin-top: 40px;
+}
+
+.profile {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: 2px solid #ff6b00;
+    object-fit: cover;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-top: -40px;
+}
+
+.profile:hover {
+    transform: scale(1.05);
+}
+
+/* Description */
+.description {
+    grid-column: 2;
+    grid-row: 2;
+    font-size: 14px;
+    line-height: 1.5;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    margin: 8px auto 20px;
+    max-width: 650px;
+    margin-top: 60px;
+}
+
+/* Features Grid (Tools Sidebar) */
+.features-grid {
+    grid-column: 1;
+    grid-row: 3;
+    background: #1a1a1a;
+    border-radius: 28px;
+    padding: 20px 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 50px;
+    height: 400px;
+    margin-top: -30px;
+}
+
+.features-grid .text-wrapper {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #ff6b00;
+    margin-top: 10px;
+    text-align: center;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.features-grid nav {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+/* Tool Buttons */
+.ai-styling-btn,
+.room-makeover-btn,
+.meme-maker-btn,
+.ai-avatar-gen-btn,
+.bg-remove-btn {
+    background: #ff6b00;
+    color: #ffffff;
+    border: none;
+    border-radius: 22px;
+    padding: 14px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    text-align: center;
+    white-space: nowrap;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.ai-styling-btn .div,
+.room-makeover-btn .div,
+.meme-maker-btn .div,
+.ai-avatar-gen-btn .div,
+.bg-remove-btn .div {
+    display: none;
+}
+
+.ai-styling-btn:hover,
+.room-makeover-btn:hover,
+.meme-maker-btn:hover,
+.ai-avatar-gen-btn:hover,
+.bg-remove-btn:hover {
+    background: #ff8533;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 107, 0, 0.4);
+}
+
+/* Image Processing Area */
+.image-processing-area {
+    grid-column: 2;
+    grid-row: 3;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    width: 100%;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+.INPUT-IMAGE,
+.OUTPUT-IMAGE {
+    background: #d4c4b0;
+    border-radius: 20px;
+    aspect-ratio: 4/3;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    overflow: hidden;
+    border: 3px dashed rgb(255, 255, 255);
+}
+
+.drag-drop {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: #1a1a1a;
+    cursor: pointer;
+    width: 100%;
+    height: 100%;
+}
+
+.drag-drop .image {
+    width: 100px;
+    height: 100px;
+}
+
+.drag-drop-your-image {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+#image-upload {
+    display: none;
+}
+
+.OUTPUT-IMAGE {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.text-wrapper-8 {
+    font-size: 16px;
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+/* Generate Button */
+.generate-btn {
+    grid-column: 2;
+    grid-row: 4;
+    background: transparent;
+    color: #ff6b00;
+    border: 3px solid #ff6b00;
+    border-radius: 40px;
+    padding: 14px 70px;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin: 0 auto 0;
+    width: fit-content;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.generate-btn .rectangle-3 {
+    display: none;
+}
+
+.generate-btn:hover {
+    background: #ff6b00;
+    color: #000000;
+    transform: scale(1.05);
+    box-shadow: 0 8px 24px rgba(255, 107, 0, 0.5);
+}
+
+.generate-btn:active {
+    transform: scale(0.98);
+}
+
+/* Prompts Bar */
+.prompts-bar {
+    grid-column: 3;
+    grid-row: 3;
+    background: #1a1a1a;
+    border-radius: 28px;
+    padding: 20px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    height: fit-content;
+    position: relative;
+    margin-top: -70px;
+}
+
+.prompts-bg {
+    display: none;
+}
+
+.prompts-bar .text-wrapper-7 {
+    font-size: 12px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: #ff6b00;
+    text-align: center;
+    margin-bottom: 4px;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+}
+
+.frame {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    overflow-y: auto;
+    padding-right: 4px;
+}
+
+.frame::-webkit-scrollbar {
+    width: 3px;
+}
+
+.frame::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.frame::-webkit-scrollbar-thumb {
+    background: #ff6b00;
+    border-radius: 2px;
+}
+
+.rectangle,
+.rectangle-2 {
+    background: #ff6b00;
+    color: #ffffff;
+    border: none;
+    border-radius: 20px;
+    padding: 11px 14px;
+    min-height: 40px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.rectangle:hover,
+.rectangle-2:hover {
+    background: #ff8533;
+    transform: translateX(-2px);
+    box-shadow: 0 2px 8px rgba(255, 107, 0, 0.4);
+}

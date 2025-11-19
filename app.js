@@ -89,6 +89,11 @@ app.get("/admin", (req, res) => {
   res.redirect("/admin/login");
 });
 
+// User dashboard route (protected - would need auth middleware later)
+app.get("/dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/dashboard/index.html"));
+});
+
 // Login route
 app.post("/login", async (req, res) => {
   console.log("Received login request:", req.body); // Debug log

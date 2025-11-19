@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta charset="utf-8" />
+    <title>AI Image Styling Dashboard</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <main class="DASHBOARD">
+      <header>
+        <button class="back-btn" type="button" aria-label="Go back">
+          <img src="/assets/images/Back Btn.png" alt="" />
+        </button>
+        <img
+          class="dashboard-logo"
+          src="/assets/images/logo-short.png"
+          alt="StudioIatto AI Powered Design"
+        />
+        <img
+          class="profile"
+          src="/assets/images/potraits (1).png"
+          alt="User profile"
+        />
+      </header>
+      <p class="description">
+        Upload your photo and choose a style button. Each button has a built-in
+        AI prompt that transforms your image instantly.
+      </p>
+      <aside class="features-grid" role="complementary" aria-label="Tools">
+        <h2 class="text-wrapper">TOOLS</h2>
+        <nav aria-label="AI Tools">
+          <button class="ai-styling-btn" type="button">
+            <span class="div"></span>
+            <span class="text-wrapper-2">Ai Styling</span>
+          </button>
+          <button class="room-makeover-btn" type="button">
+            <span class="div"></span>
+            <span class="text-wrapper-3">Room Makeover</span>
+          </button>
+          <button class="meme-maker-btn" type="button">
+            <span class="div"></span>
+            <span class="text-wrapper-4">Meme Maker</span>
+          </button>
+          <button class="ai-avatar-gen-btn" type="button">
+            <span class="div"></span>
+            <span class="text-wrapper-5">Ai Avatar Generator</span>
+          </button>
+          <button class="bg-remove-btn" type="button">
+            <span class="div"></span>
+            <span class="text-wrapper-6">BG Remover</span>
+          </button>
+        </nav>
+      </aside>
+      <section class="image-processing-area">
+        <div class="INPUT-IMAGE" role="region" aria-label="Input image area">
+          <label for="image-upload" class="drag-drop">
+            <img
+              class="image"
+              src="/assets/images/dragndrop.png"
+              alt="Upload icon"
+            />
+            <span class="drag-drop-your-image">Drag &amp; Drop your Image</span>
+            <input
+              type="file"
+              id="image-upload"
+              accept="image/*"
+              aria-label="Upload your image"
+            />
+          </label>
+        </div>
+        <div class="OUTPUT-IMAGE" role="region" aria-label="Output image area">
+          <span class="text-wrapper-8">Output Image</span>
+        </div>
+      </section>
+      <button class="generate-btn" type="button">
+        <span class="rectangle-3"></span>
+        <span class="text-wrapper-9">GENERATE</span>
+      </button>
+      <aside class="prompts-bar" role="complementary" aria-label="Prompts">
+        <div class="prompts-bg"></div>
+        <h2 class="text-wrapper-7">PROMPTS</h2>
+        <nav class="frame" aria-label="Prompt options">
+          <button
+            class="rectangle"
+            type="button"
+            aria-label="Prompt option 1"
+          ></button>
+          <button
+            class="rectangle"
+            type="button"
+            aria-label="Prompt option 2"
+          ></button>
+          <button
+            class="rectangle"
+            type="button"
+            aria-label="Prompt option 3"
+          ></button>
+          <button
+            class="rectangle"
+            type="button"
+            aria-label="Prompt option 4"
+          ></button>
+          <button
+            class="rectangle"
+            type="button"
+            aria-label="Prompt option 5"
+          ></button>
+          <button
+            class="rectangle"
+            type="button"
+            aria-label="Prompt option 6"
+          ></button>
+          <button
+            class="rectangle"
+            type="button"
+            aria-label="Prompt option 7"
+          ></button>
+          <button
+            class="rectangle-2"
+            type="button"
+            aria-label="Prompt option 8"
+          ></button>
+        </nav>
+      </aside>
+    </main>
+  </body>
+</html>
