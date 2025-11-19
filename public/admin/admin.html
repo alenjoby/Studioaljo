@@ -4,123 +4,370 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Admin Panel - Studioaljo</title>
-    <link rel="stylesheet" href="../style.css" />
-    <link rel="stylesheet" href="style.css" />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+
+      :root {
+        --bg: #ffffff;
+        --bg-card: #ffffff;
+        --text: #1a1a1a;
+        --text-secondary: rgba(26, 26, 26, 0.7);
+        --orange: #ff6b00;
+        --border: rgba(26, 26, 26, 0.12);
+        --danger: #dc3545;
+        --success: #28a745;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+        background: var(--bg);
+        color: var(--text);
+        line-height: 1.5;
+        -webkit-font-smoothing: antialiased;
+        min-height: 100vh;
+        padding: 20px;
+      }
+
+      .container {
+        max-width: 1300px;
+        margin: 0 auto;
+      }
+
+      .navbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 16px 32px;
+        position: sticky;
+        top: 20px;
+        z-index: 1000;
+        background: rgba(255, 255, 255, 0.7);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 107, 0, 0.1);
+        border-radius: 24px;
+        box-shadow: 0 8px 32px rgba(255, 107, 0, 0.08),
+          0 2px 8px rgba(0, 0, 0, 0.04);
+        margin-bottom: 32px;
+      }
+
+      .brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        font-weight: 700;
+        font-size: 18px;
+      }
+
+      .brand img {
+        width: 40px;
+        height: auto;
+      }
+
+      .nav-actions {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+      }
+
+      .btn {
+        padding: 10px 20px;
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        border: none;
+        transition: all 0.2s ease;
+        font-family: inherit;
+      }
+
+      .btn-primary {
+        background: linear-gradient(135deg, var(--orange) 0%, #ff8533 100%);
+        color: #ffffff;
+        box-shadow: 0 4px 16px rgba(255, 107, 0, 0.3);
+      }
+
+      .btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 24px rgba(255, 107, 0, 0.4);
+      }
+
+      .btn-outline {
+        background: transparent;
+        color: var(--text);
+        border: 2px solid var(--border);
+      }
+
+      .btn-outline:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+      }
+
+      .card {
+        background: var(--bg-card);
+        border: 1px solid var(--border);
+        border-radius: 24px;
+        padding: 32px;
+        margin-bottom: 24px;
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+      }
+
+      h2 {
+        font-size: 28px;
+        font-weight: 800;
+        margin-bottom: 24px;
+        letter-spacing: -0.02em;
+      }
+
+      .stack {
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+      }
+
+      .form-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .label {
+        font-weight: 600;
+        font-size: 14px;
+        color: var(--text);
+      }
+
+      .input {
+        padding: 12px 16px;
+        border: 2px solid var(--border);
+        border-radius: 12px;
+        font-size: 15px;
+        font-family: inherit;
+        color: var(--text);
+        background: var(--bg);
+        transition: all 0.2s ease;
+      }
+
+      .input:focus {
+        outline: none;
+        border-color: var(--orange);
+        box-shadow: 0 0 0 3px rgba(255, 107, 0, 0.1);
+      }
+
+      .row {
+        display: flex;
+        gap: 12px;
+        margin-top: 8px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+
+      .notification {
+        padding: 16px 24px;
+        border-radius: 12px;
+        margin-bottom: 24px;
+        font-weight: 500;
+      }
+
+      .notification.success {
+        background: rgba(40, 167, 69, 0.1);
+        color: var(--success);
+        border: 1px solid rgba(40, 167, 69, 0.2);
+      }
+
+      .notification.error {
+        background: rgba(220, 53, 69, 0.1);
+        color: var(--danger);
+        border: 1px solid rgba(220, 53, 69, 0.2);
+      }
+
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 24px;
+      }
+
+      .table thead {
+        border-bottom: 2px solid var(--border);
+      }
+
+      .table th {
+        text-align: left;
+        padding: 12px 16px;
+        font-weight: 700;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.05em;
+        color: var(--text-secondary);
+      }
+
+      .table td {
+        padding: 16px;
+        border-bottom: 1px solid var(--border);
+      }
+
+      .table tbody tr:hover {
+        background: rgba(255, 107, 0, 0.02);
+      }
+
+      .action-buttons {
+        display: inline-flex;
+        gap: 8px;
+      }
+
+      .edit-btn {
+        padding: 8px 16px;
+        background: transparent;
+        color: var(--text);
+        border: 2px solid var(--border);
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .edit-btn:hover {
+        border-color: var(--orange);
+        color: var(--orange);
+        box-shadow: 0 2px 8px rgba(255, 107, 0, 0.15);
+      }
+
+      .delete-btn {
+        padding: 8px 16px;
+        background: var(--danger);
+        color: #ffffff;
+        border: none;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+      }
+
+      .delete-btn:hover {
+        filter: brightness(1.1);
+        box-shadow: 0 2px 8px rgba(220, 53, 69, 0.3);
+      }
+    </style>
   </head>
   <body>
-    <div class="admin-container">
-      <div class="logo">
-        <img src="../assets/images/logo white.png" alt="Studioaljo Logo" />
-      </div>
-
-      <div class="admin-header">
-        <h1>Admin Dashboard</h1>
-        <div style="display: flex; gap: 10px">
-          <button class="add-user-btn" id="showAddUserForm">
+    <div class="container">
+      <nav class="navbar">
+        <div class="brand">
+          <img src="/assets/images/logo white.png" alt="Studioaljo" />
+          <span>Admin</span>
+        </div>
+        <div class="nav-actions">
+          <button class="btn btn-primary" id="showAddUserForm">
             Add New User
           </button>
-          <button
-            class="btn btn-secondary"
-            onclick="logout()"
-            style="
-              padding: 12px 25px;
-              text-transform: uppercase;
-              letter-spacing: 1px;
-            "
-          >
-            Logout
-          </button>
+          <button class="btn btn-outline" onclick="logout()">Logout</button>
         </div>
-      </div>
+      </nav>
 
       <div id="notification" class="notification hidden"></div>
 
       <!-- Add User Form -->
-      <div class="section" id="addUserSection">
+      <section class="card" id="addUserSection">
         <h2>Add New User</h2>
-        <form id="addUserForm">
+        <form id="addUserForm" class="stack">
           <div class="form-group">
-            <label for="name">Full Name</label>
+            <label for="name" class="label">Full Name</label>
             <input
               type="text"
               id="name"
+              class="input"
               placeholder="Enter full name"
               required
             />
           </div>
           <div class="form-group">
-            <label for="email">Email Address</label>
+            <label for="email" class="label">Email Address</label>
             <input
               type="email"
               id="email"
+              class="input"
               placeholder="Enter email address"
               required
             />
           </div>
           <div class="form-group">
-            <label for="password">Password</label>
+            <label for="password" class="label">Password</label>
             <input
               type="password"
               id="password"
+              class="input"
               placeholder="Enter password"
               required
             />
           </div>
-          <div class="form-actions">
+          <div class="row">
             <button type="submit" class="btn btn-primary">Add User</button>
-            <button type="button" class="btn btn-secondary" id="cancelAddUser">
+            <button type="button" class="btn btn-outline" id="cancelAddUser">
               Cancel
             </button>
           </div>
         </form>
-      </div>
+      </section>
 
       <!-- Edit User Form -->
-      <div class="section hidden" id="editUserSection">
+      <section class="card hidden" id="editUserSection">
         <h2>Edit User</h2>
-        <form id="editUserForm">
+        <form id="editUserForm" class="stack">
           <input type="hidden" id="userId" />
           <div class="form-group">
-            <label for="editName">Full Name</label>
+            <label for="editName" class="label">Full Name</label>
             <input
               type="text"
               id="editName"
+              class="input"
               placeholder="Enter full name"
               required
             />
           </div>
           <div class="form-group">
-            <label for="editEmail">Email Address</label>
+            <label for="editEmail" class="label">Email Address</label>
             <input
               type="email"
               id="editEmail"
+              class="input"
               placeholder="Enter email address"
               required
             />
           </div>
           <div class="form-group">
-            <label for="editPassword"
+            <label for="editPassword" class="label"
               >Password (leave blank to keep current)</label
             >
             <input
               type="password"
               id="editPassword"
+              class="input"
               placeholder="Enter new password"
             />
           </div>
-          <div class="form-actions">
+          <div class="row">
             <button type="submit" class="btn btn-primary">Update User</button>
-            <button type="button" class="btn btn-secondary" id="cancelEditUser">
+            <button type="button" class="btn btn-outline" id="cancelEditUser">
               Cancel
             </button>
           </div>
         </form>
-      </div>
+      </section>
 
       <!-- Users List -->
-      <div class="section">
+      <section class="card">
         <h2>Users Management</h2>
-        <table>
+        <table class="table">
           <thead>
             <tr>
               <th>Name</th>
@@ -132,9 +379,8 @@
             <!-- User rows will be inserted here -->
           </tbody>
         </table>
-      </div>
+      </section>
     </div>
-
-    <script src="admin-script.js"></script>
+    <script src="/admin/admin-script.js"></script>
   </body>
 </html>
