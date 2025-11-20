@@ -120,7 +120,7 @@ header {
     color: #ff6b00;
     margin-top: 10px;
     text-align: center;
-    font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: josefin sans, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .features-grid nav {
@@ -150,6 +150,7 @@ header {
     display: flex;
     align-items: center;
     justify-content: center;
+    font-family: josefin sans, -apple-system, BlinkMacSystemFont, sans-serif;
 }
 
 .ai-styling-btn .div,

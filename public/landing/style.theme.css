@@ -1,5 +1,6 @@
 /* Modern Landing Page - Themed with Bright Orange, Deep Charcoal, Crisp White */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap");
 
 :root {
   --bg: #ffffff;
@@ -12,6 +13,67 @@
   /* Bright Orange */
   --accent: var(--orange);
   --border: rgba(26, 26, 26, 0.12);
+
+  /* ============================
+     TYPOGRAPHY & SPACING SYSTEM
+     ============================ */
+
+  /* Fonts */
+  --font-heading: "Josefin Sans", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
+
+  /* Desktop-first Font Sizes */
+  --h1: 4rem; /* 64px */
+  --h2: 3rem; /* 48px */
+  --h3: 2rem; /* 32px */
+  --h4: 1.5rem; /* 24px */
+  --lead: 1.25rem; /* 20px */
+  --body: 1rem; /* 16px */
+  --small: 0.875rem; /* 14px */
+
+  /* Line Heights */
+  --lh-heading: 1.2;
+  --lh-body: 1.6;
+
+  /* Spacing Scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Letter Spacing */
+  --ls-heading: -0.02em;
+  --ls-body: -0.01em;
+}
+
+/* Tablet Breakpoint */
+@media (max-width: 1024px) {
+  :root {
+    --h1: 3rem; /* 48px */
+    --h2: 2.25rem; /* 36px */
+    --h3: 1.75rem; /* 28px */
+    --h4: 1.25rem; /* 20px */
+    --lead: 1.125rem; /* 18px */
+    --body: 1rem; /* 16px */
+    --small: 0.875rem; /* 14px */
+  }
+}
+
+/* Mobile Breakpoint */
+@media (max-width: 640px) {
+  :root {
+    --h1: 2.25rem; /* 36px */
+    --h2: 1.75rem; /* 28px */
+    --h3: 1.5rem; /* 24px */
+    --h4: 1.125rem; /* 18px */
+    --lead: 1rem; /* 16px */
+    --body: 0.9375rem; /* 15px */
+    --small: 0.8125rem; /* 13px */
+  }
 }
 
 * {
@@ -20,13 +82,116 @@
   box-sizing: border-box;
 }
 
+/* ============================
+   BASE ELEMENT DEFAULTS
+   ============================ */
+
 body {
-  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  font-family: var(--font-body);
   background: var(--bg);
   color: var(--text);
-  line-height: 1.5;
+  font-size: var(--body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
   -webkit-font-smoothing: antialiased;
   overflow-x: hidden;
+}
+
+/* Headings - Josefin Sans with optimized spacing */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.hero-title,
+.section-title,
+.feature-showcase-title,
+.why-choose-title,
+.cta-title,
+.powered-by-title,
+.tool-title,
+.footer-brand {
+  font-family: var(--font-heading);
+  line-height: var(--lh-heading);
+  letter-spacing: var(--ls-heading);
+  font-weight: 600;
+}
+
+h1 {
+  font-size: var(--h1);
+}
+
+h2 {
+  font-size: var(--h2);
+}
+
+h3 {
+  font-size: var(--h3);
+}
+
+h4 {
+  font-size: var(--h4);
+}
+
+/* Paragraph defaults */
+p {
+  font-family: var(--font-body);
+  font-size: var(--body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+}
+
+/* Lead text - prominent subheads */
+.lead,
+.hero-subtitle,
+.section-subtitle {
+  font-family: var(--font-body);
+  font-size: var(--lead);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
+}
+
+/* Small text */
+small,
+.small,
+.tool-label,
+.section-label,
+.author-role,
+.footer-copyright {
+  font-family: var(--font-body);
+  font-size: var(--small);
+  line-height: var(--lh-body);
+}
+
+/* Links - inherit body font */
+a {
+  font-family: var(--font-body);
+  letter-spacing: var(--ls-body);
+}
+
+/* Buttons - inherit body font */
+button,
+.btn-launch,
+.btn-generate,
+.tool-try-btn,
+.btn-cta-primary,
+.btn-cta-secondary {
+  font-family: var(--font-body);
+  font-size: var(--body);
+  letter-spacing: var(--ls-body);
+  line-height: 1;
+}
+
+/* Form elements - body font consistency */
+input,
+textarea,
+select,
+.generate-input {
+  font-family: var(--font-body);
+  font-size: var(--body);
+  line-height: var(--lh-body);
+  letter-spacing: var(--ls-body);
 }
 
 .container {
@@ -61,10 +226,12 @@ body {
   inset: -2px;
   border-radius: 24px;
   padding: 2px;
-  background: linear-gradient(135deg,
-      var(--orange) 0%,
-      rgba(255, 107, 0, 0.3) 50%,
-      var(--orange) 100%);
+  background: linear-gradient(
+    135deg,
+    var(--orange) 0%,
+    rgba(255, 107, 0, 0.3) 50%,
+    var(--orange) 100%
+  );
   -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
   -webkit-mask-composite: xor;
   mask-composite: exclude;
@@ -78,7 +245,6 @@ body {
 }
 
 @keyframes borderGlow {
-
   0%,
   100% {
     opacity: 0.3;
@@ -105,7 +271,6 @@ body {
 .logo:hover {
   transform: rotate(-5deg) scale(1.05);
 }
-
 
 .nav-menu {
   display: flex;
@@ -137,10 +302,12 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg,
-      transparent,
-      rgba(255, 107, 0, 0.1),
-      transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 107, 0, 0.1),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -183,10 +350,12 @@ body {
   left: -100%;
   width: 100%;
   height: 100%;
-  background: linear-gradient(90deg,
-      transparent,
-      rgba(255, 255, 255, 0.3),
-      transparent);
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
   transition: left 0.5s ease;
 }
 
@@ -345,7 +514,6 @@ body {
 }
 
 @keyframes floatTag {
-
   0%,
   100% {
     transform: translateY(0);
@@ -357,7 +525,6 @@ body {
 }
 
 @keyframes floatTagCenter {
-
   0%,
   100% {
     transform: translateX(-50%) translateY(0);
@@ -654,12 +821,14 @@ body.connector-enhanced .tool-card::before {
 }
 
 .text-gradient {
-  background: linear-gradient(90deg,
-      #ff6b00 0%,
-      #ff8e53 25%,
-      #ffb347 50%,
-      #ffa500 75%,
-      #ff6b00 100%);
+  background: linear-gradient(
+    90deg,
+    #ff6b00 0%,
+    #ff8e53 25%,
+    #ffb347 50%,
+    #ffa500 75%,
+    #ff6b00 100%
+  );
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
@@ -698,7 +867,6 @@ body.connector-enhanced .tool-card::before {
 
 /* Responsive: hero */
 @media (max-width: 1200px) {
-
   .preview-card-1,
   .preview-card-2,
   .preview-card-3,
@@ -834,7 +1002,6 @@ body.connector-enhanced .tool-card::before {
 }
 
 @media (max-width: 900px) {
-
   .feature-showcase,
   .feature-showcase-reverse {
     grid-template-columns: 1fr;
@@ -890,8 +1057,6 @@ body.connector-enhanced .tool-card::before {
   object-fit: cover;
   display: block;
 }
-
-
 
 .why-choose-content {
   display: flex;
@@ -1184,7 +1349,7 @@ body.connector-enhanced .tool-card::before {
   line-height: 1.4;
 }
 
-.testimonial-stat-card>.quote-mark {
+.testimonial-stat-card > .quote-mark {
   font-size: 40px;
   color: var(--orange);
   line-height: 1;
@@ -1629,6 +1794,25 @@ body.connector-enhanced .tool-card::before {
   width: 100%;
   display: block;
   max-width: none;
+  font-family: "Inter", -apple-system, BlinkMacSystemFont, sans-serif;
+  background: linear-gradient(
+    90deg,
+    #ffffff 0%,
+    #ffffff 50%,
+    var(--orange) 50%,
+    var(--orange) 100%
+  );
+  background-size: 200% 100%;
+  background-position: 0% 0%;
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  transition: background-position 1s ease;
+  cursor: pointer;
+}
+
+.footer-brand:hover {
+  background-position: 100% 0%;
 }
 
 .footer-copyright {
@@ -1767,4 +1951,165 @@ body.connector-enhanced .tool-card::before {
   100% {
     transform: translate(0, 0) rotate(0deg);
   }
+}
+
+/* ============================
+   SPACING UTILITY CLASSES
+   Compact margin & padding utilities
+   ============================ */
+
+/* Margin Top */
+.mt-1 {
+  margin-top: var(--space-1);
+}
+.mt-2 {
+  margin-top: var(--space-2);
+}
+.mt-3 {
+  margin-top: var(--space-3);
+}
+.mt-4 {
+  margin-top: var(--space-4);
+}
+.mt-5 {
+  margin-top: var(--space-5);
+}
+.mt-6 {
+  margin-top: var(--space-6);
+}
+.mt-7 {
+  margin-top: var(--space-7);
+}
+.mt-8 {
+  margin-top: var(--space-8);
+}
+
+/* Margin Bottom */
+.mb-1 {
+  margin-bottom: var(--space-1);
+}
+.mb-2 {
+  margin-bottom: var(--space-2);
+}
+.mb-3 {
+  margin-bottom: var(--space-3);
+}
+.mb-4 {
+  margin-bottom: var(--space-4);
+}
+.mb-5 {
+  margin-bottom: var(--space-5);
+}
+.mb-6 {
+  margin-bottom: var(--space-6);
+}
+.mb-7 {
+  margin-bottom: var(--space-7);
+}
+.mb-8 {
+  margin-bottom: var(--space-8);
+}
+
+/* Margin All Sides */
+.m-1 {
+  margin: var(--space-1);
+}
+.m-2 {
+  margin: var(--space-2);
+}
+.m-3 {
+  margin: var(--space-3);
+}
+.m-4 {
+  margin: var(--space-4);
+}
+.m-5 {
+  margin: var(--space-5);
+}
+.m-6 {
+  margin: var(--space-6);
+}
+.m-7 {
+  margin: var(--space-7);
+}
+.m-8 {
+  margin: var(--space-8);
+}
+
+/* Padding Top */
+.pt-1 {
+  padding-top: var(--space-1);
+}
+.pt-2 {
+  padding-top: var(--space-2);
+}
+.pt-3 {
+  padding-top: var(--space-3);
+}
+.pt-4 {
+  padding-top: var(--space-4);
+}
+.pt-5 {
+  padding-top: var(--space-5);
+}
+.pt-6 {
+  padding-top: var(--space-6);
+}
+.pt-7 {
+  padding-top: var(--space-7);
+}
+.pt-8 {
+  padding-top: var(--space-8);
+}
+
+/* Padding Bottom */
+.pb-1 {
+  padding-bottom: var(--space-1);
+}
+.pb-2 {
+  padding-bottom: var(--space-2);
+}
+.pb-3 {
+  padding-bottom: var(--space-3);
+}
+.pb-4 {
+  padding-bottom: var(--space-4);
+}
+.pb-5 {
+  padding-bottom: var(--space-5);
+}
+.pb-6 {
+  padding-bottom: var(--space-6);
+}
+.pb-7 {
+  padding-bottom: var(--space-7);
+}
+.pb-8 {
+  padding-bottom: var(--space-8);
+}
+
+/* Padding All Sides */
+.p-1 {
+  padding: var(--space-1);
+}
+.p-2 {
+  padding: var(--space-2);
+}
+.p-3 {
+  padding: var(--space-3);
+}
+.p-4 {
+  padding: var(--space-4);
+}
+.p-5 {
+  padding: var(--space-5);
+}
+.p-6 {
+  padding: var(--space-6);
+}
+.p-7 {
+  padding: var(--space-7);
+}
+.p-8 {
+  padding: var(--space-8);
 }
