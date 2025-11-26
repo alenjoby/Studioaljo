@@ -1,8 +1,11 @@
+require("dotenv").config(); // Must be at the very top
+const generateRouter = require("./routes/generate");
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const User = require("./models/user");
-
+const usersRouter = require("./routes/users"); // Import routes once
+const geminiRouter = require("./routes/gemini");
 const {
   requireAuth,
   verifyAdmin,
@@ -10,11 +13,21 @@ const {
   activeSessions,
 } = require("./middleware/auth");
 
+// 1. Initialize the App FIRST (Before using app.use)
 const app = express();
 const port = 3500;
 
-// Middleware
-app.use(express.json());
+// 2. Middleware
+// CRITICAL: Increased limit to 50mb to handle Image Uploads (Base64)
+app.use(express.json({ limit: "50mb" }));
+app.use(express.urlencoded({ extended: true, limit: "50mb" }));
+
+// 3. Connect Routes
+// This connects your Gemini 2.5 logic and User logic
+app.use("/users", usersRouter);
+
+app.use("/api/generate", generateRouter);
+app.use("/api/gemini", geminiRouter);
 
 // MongoDB connection
 mongoose
@@ -25,7 +38,14 @@ mongoose
     console.log("Please make sure MongoDB is running on localhost:27017");
   });
 
-// Landing page route (must be before static middleware to override index.html)
+// Serve static files (CSS, JS, images, etc.)
+app.use(express.static(path.join(__dirname, "public")));
+
+// ==========================
+// PAGE ROUTES
+// ==========================
+
+// Landing page route
 app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "public/landing/index.html"));
 });
@@ -35,17 +55,24 @@ app.get("/login", (req, res) => {
   res.sendFile(path.join(__dirname, "public/index.html"));
 });
 
-// Serve static files (CSS, JS, images, etc.)
-app.use(express.static(path.join(__dirname, "public")));
-
-// Routes
-const users = require("./routes/users");
-app.use("/users", users);
-
 // Admin login page (public access)
 app.get("/admin/login", (req, res) => {
   res.sendFile(path.join(__dirname, "public/admin/login.html"));
 });
+
+// Admin dashboard (protected)
+app.get("/admin/dashboard", requireAuth, (req, res) => {
+  res.sendFile(path.join(__dirname, "public/admin/admin.html"));
+});
+
+// Redirect /admin to login
+app.get("/admin", (req, res) => {
+  res.redirect("/admin/login");
+});
+
+// ==========================
+// API ROUTES (AUTH)
+// ==========================
 
 // Admin login endpoint
 app.post("/admin/login", (req, res) => {
@@ -79,33 +106,15 @@ app.post("/admin/logout", (req, res) => {
   res.json({ message: "Logged out successfully" });
 });
 
-// Admin dashboard (protected)
-app.get("/admin/dashboard", requireAuth, (req, res) => {
-  res.sendFile(path.join(__dirname, "public/admin/admin.html"));
-});
-
-// Redirect /admin to login or dashboard based on auth
-app.get("/admin", (req, res) => {
-  res.redirect("/admin/login");
-});
-
-// User dashboard route (protected - would need auth middleware later)
-app.get("/dashboard", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/dashboard/index.html"));
-});
-
-// Login route
+// User Login route
 app.post("/login", async (req, res) => {
-  console.log("Received login request:", req.body); // Debug log
+  console.log("Received login request:", req.body);
   const { email, password } = req.body;
 
-  // Check if required fields are present
   if (!email || !password) {
-    console.log("Missing email or password"); // Debug log
     return res.status(400).json({ error: "Email and password are required" });
   }
 
-  // Validate email format
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
   if (!emailRegex.test(email)) {
     return res.status(400).json({ error: "Invalid email format" });
@@ -113,7 +122,6 @@ app.post("/login", async (req, res) => {
 
   try {
     const user = await User.findOne({ email, password });
-    console.log("User found:", user); // Debug log
     if (user) {
       res.json({
         message: "Login successful",
@@ -123,7 +131,7 @@ app.post("/login", async (req, res) => {
       res.status(401).json({ error: "Invalid email or password" });
     }
   } catch (error) {
-    console.log("Login error:", error); // Debug log
+    console.log("Login error:", error);
     res.status(500).json({ error: error.message });
   }
 });

@@ -1,3 +1,57 @@
+// Typewriter animation for generate input
+const prompts = [
+  "Turn my photo into a watercolor painting",
+  "Create a cyberpunk version of this image",
+  "Transform this room into a modern living space",
+  "Make me look like a superhero",
+  "Generate a meme with this photo",
+  "Remove the background from my image",
+  "Style this photo like a vintage poster",
+  "Create an AI avatar from my selfie",
+];
+
+let currentPromptIndex = 0;
+let currentText = "";
+let isDeleting = false;
+let typeSpeed = 100;
+
+function typewriterEffect() {
+  const inputElement = document.querySelector(".generate-input");
+  if (!inputElement) return;
+
+  const currentPrompt = prompts[currentPromptIndex];
+
+  if (!isDeleting) {
+    // Typing
+    currentText = currentPrompt.substring(0, currentText.length + 1);
+    typeSpeed = 100;
+  } else {
+    // Deleting
+    currentText = currentPrompt.substring(0, currentText.length - 1);
+    typeSpeed = 50;
+  }
+
+  inputElement.placeholder = currentText;
+
+  if (!isDeleting && currentText === currentPrompt) {
+    // Pause at end before deleting
+    typeSpeed = 2000;
+    isDeleting = true;
+  } else if (isDeleting && currentText === "") {
+    // Move to next prompt
+    isDeleting = false;
+    currentPromptIndex = (currentPromptIndex + 1) % prompts.length;
+    typeSpeed = 500;
+  }
+
+  setTimeout(typewriterEffect, typeSpeed);
+}
+
+// Start typewriter animation on page load
+document.addEventListener("DOMContentLoaded", () => {
+  typewriterEffect();
+});
+
 // JS module to draw responsive Bezier connectors and sync card border animations
 const NARROW_MQ = "(max-width: 1100px)";
 const PREFERS_REDUCED = "(prefers-reduced-motion: reduce)";
