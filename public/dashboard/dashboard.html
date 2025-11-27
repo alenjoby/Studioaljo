@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Studioaljo — AI Styling Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/css/global.css" />
+    <link rel="stylesheet" href="/css/dashboard.css" />
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <!-- Top row: back button and profile avatar -->
+      <div class="topbar-row">
+        <button class="icon-btn" id="back-btn" aria-label="Back">
+          <i data-lucide="chevron-left"></i>
+        </button>
+        <div class="profile-avatar">
+          <img
+            src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
+            alt="User"
+          />
+        </div>
+      </div>
+
+      <div class="brand">
+        <img
+          src="/assets/images/logo-short.png"
+          alt="Studioaljo"
+          onerror="this.style.display='none'"
+        />
+      </div>
+
+      <h2 class="page-title">
+        Upload your photo and choose a style button. Each button has a built-in
+        AI prompt that transforms your image instantly.
+      </h2>
+
+      <div class="availability-pill" id="quota-pill">
+        9/10 Generations Available Today
+      </div>
+    </header>
+
+    <main class="dashboard">
+      <section class="workspace">
+        <!-- Left Column: Tools + Preview -->
+        <div class="left-column">
+          <!-- Top Panel: Tools -->
+          <aside class="tools-rail">
+            <h4 class="rail-title">TOOLS</h4>
+            <button
+              class="rail-btn rail-btn--active"
+              type="button"
+              data-prompt="Ai Styling: Choose a style on the right. Your uploaded image will be transformed to match the selected fashion while preserving face and pose."
+            >
+              Ai Styling
+            </button>
+            <button
+              class="rail-btn"
+              type="button"
+              data-prompt="Room Makeover: Upload a room photo. Select a design theme to restyle furniture, colors, and decor while keeping room layout intact."
+            >
+              Room Makeover
+            </button>
+            <button
+              class="rail-btn"
+              type="button"
+              data-prompt="Meme Maker: Upload an image and add witty top/bottom captions. Uses templates for quick, shareable memes."
+            >
+              Meme Maker
+            </button>
+            <button
+              class="rail-btn"
+              type="button"
+              data-prompt="AI Avatar Generator: Upload a clear selfie. Generate stylized avatars in various art styles while preserving identity."
+            >
+              Ai Avatar Generator
+            </button>
+            <button
+              class="rail-btn"
+              type="button"
+              data-prompt="Background Remover: Upload an image. Automatically removes background and outputs a clean PNG with transparency."
+            >
+              BG Remover
+            </button>
+          </aside>
+
+          <!-- Bottom Panel: Preview Prompt -->
+          <aside class="preview-panel">
+            <div class="prompt-preview__title">Preview Prompt:</div>
+            <div class="prompt-preview__box" id="preview-prompt">
+              Select a style to see its prompt.
+            </div>
+          </aside>
+        </div>
+
+        <!-- Center Panels -->
+        <section class="panels">
+          <div class="canvas-container">
+            <!-- Source Input -->
+            <div class="viewport">
+              <div class="viewport-label">
+                <span>SOURCE INPUT</span>
+                <span class="res-badge hidden" id="img-res">0x0</span>
+              </div>
+              <div class="viewport-box" id="drop-zone">
+                <div class="bracket tl"></div>
+                <div class="bracket tr"></div>
+                <div class="bracket bl"></div>
+                <div class="bracket br"></div>
+
+                <input
+                  type="file"
+                  id="file-input"
+                  class="hidden"
+                  accept="image/*"
+                />
+
+                <div class="upload-content" id="upload-ui">
+                  <i data-lucide="upload-cloud" class="upload-icon"></i>
+                  <h4 style="font-size: 14px; margin-bottom: 5px">
+                    Upload Source
+                  </h4>
+                  <p style="font-size: 10px; color: #555">
+                    Drag & drop or click to browse
+                  </p>
+                </div>
+
+                <img id="input-img" class="display-img hidden" alt="" />
+
+                <button
+                  id="clear-btn"
+                  class="hidden"
+                  style="
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: rgba(0, 0, 0, 0.6);
+                    color: white;
+                    border: none;
+                    padding: 5px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    z-index: 50;
+                  "
+                >
+                  <i data-lucide="x" style="width: 14px"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Render Output -->
+            <div class="viewport">
+              <div class="viewport-label">
+                <span>RENDER OUTPUT</span>
+                <span id="status-txt">IDLE</span>
+              </div>
+              <div class="viewport-box" id="output-box">
+                <div class="bracket tl"></div>
+                <div class="bracket tr"></div>
+                <div class="bracket bl"></div>
+                <div class="bracket br"></div>
+
+                <!-- Scanning Laser Line -->
+                <div class="scan-line"></div>
+
+                <div
+                  id="output-placeholder"
+                  style="text-align: center; opacity: 0.3"
+                >
+                  <i
+                    data-lucide="image"
+                    style="width: 40px; height: 40px; margin-bottom: 10px"
+                  ></i>
+                  <p style="font-size: 10px">AWAITING INPUT</p>
+                </div>
+
+                <img id="output-img" class="display-img hidden" alt="" />
+                <a
+                  id="download-btn"
+                  class="hidden"
+                  href="#"
+                  download
+                  style="
+                    position: absolute;
+                    bottom: 15px;
+                    background: black;
+                    color: white;
+                    padding: 5px 15px;
+                    border-radius: 20px;
+                    text-decoration: none;
+                    font-size: 10px;
+                    border: 1px solid #333;
+                    z-index: 30;
+                  "
+                  >Save Asset</a
+                >
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- Right Style Rail -->
+        <aside class="styles-rail">
+          <h4 class="rail-title">AiStyling</h4>
+          <div class="styles-list" id="styles-list">
+            <button
+              class="style-btn"
+              data-prompt="Transform the outfit into trendy modern streetwear style with oversized graphic hoodie, distressed baggy jeans, chunky sneakers, baseball cap worn backwards, gold chain necklace, and casual urban attitude. Keep the person's face and pose the same."
+            >
+              Streetwear
+            </button>
+            <button
+              class="style-btn"
+              data-prompt="Transform into an elegant evening look with a luxurious floor-length gown in deep emerald green or midnight blue, sleek updo hairstyle with elegant waves, statement diamond earrings, sophisticated makeup with bold red lips, and confident glamorous pose. Maintain facial features."
+            >
+              Evening Gown
+            </button>
+            <button
+              class="style-btn"
+              data-prompt="Change outfit to sharp business professional attire with tailored navy blue suit, crisp white dress shirt, silk tie, polished leather shoes, neat combed hairstyle, professional grooming, confident executive posture. Keep the same person and facial features."
+            >
+              Business Pro
+            </button>
+            <button
+              class="style-btn"
+              data-prompt="Transform My image into a Business Style Outfit, dont play with my face, i want it 100% preserved i want the same pose same facial structure facial features. single face should be noted as incapability of GEMINI"
+            >
+              Bohemian
+            </button>
+            <button
+              class="style-btn"
+              data-prompt="Transform into edgy rockstar punk style with ripped black leather jacket covered in metal studs and patches, band t-shirt, torn skinny jeans, combat boots, spiked or colorful dyed hair (mohawk or wild style), dark smokey eye makeup, multiple piercings, rebellious attitude. Keep face recognizable."
+            >
+              Punk Rock
+            </button>
+            <button
+              class="style-btn"
+              data-prompt="Transform into trendy K-pop idol style with colorful pastel hair (pink, lavender, or mint), perfectly styled with volume and shine, coordinated fashion-forward outfit with crop top and high-waisted pants, dewy glowing skin, gradient lips, aegyo sal under eyes, youthful energetic pose. Maintain person's identity."
+            >
+              K-pop Idol
+            </button>
+            <button
+              class="style-btn"
+              data-prompt="Transform into classic 90s hip-hop fashion with oversized baggy jeans sagging slightly, colorful windbreaker or Starter jacket, Timberland boots or Air Jordans, bucket hat or durag, thick gold chain, hoop earrings, cornrows or box braids hairstyle, throwback urban swagger. Keep facial features intact."
+            >
+              90s Hip-Hop
+            </button>
+            <button
+              class="style-btn"
+              data-prompt="Transform into 1950s Hollywood glamour style with vintage polka dot or wiggle dress, perfectly curled retro hairstyle with victory rolls, winged eyeliner, red lipstick, pearl necklace, white gloves, classic hourglass silhouette, elegant pose like Marilyn Monroe or Audrey Hepburn. Preserve person's face."
+            >
+              Vintage Glam
+            </button>
+            <button
+              class="style-btn"
+              data-prompt="Transform the outfit into elaborate Victorian steampunk fashion with brass goggles with amber lenses, ornate clockwork gears integrated into clothing, rich leather corsets and straps with buckles, copper pipes and valves as accessories, layered Victorian tailored coat with epaulettes, top hat with gears, weathered industrial textures, mechanical pocket watches, and intricate retrofuturistic details. Keep person's face the same."
+            >
+              Steampunk
+            </button>
+            <button
+              class="style-btn"
+              data-prompt="Transform into trendy athleisure sporty Look (a sports bra and sports pant), dont play with my face, i want it 100% preserved i want the same pose same facial structure facial features. single face should be noted as incapability of GEMINI"
+            >
+              Athleisure
+            </button>
+          </div>
+        </aside>
+      </section>
+
+      <div class="cta">
+        <button id="generate-btn" class="btn btn-primary btn-generate">
+          GENERATE
+        </button>
+        <div class="error-message" id="error-box"></div>
+      </div>
+    </main>
+
+    <script src="/js/dashboard.js" defer></script>
+  </body>
+</html>

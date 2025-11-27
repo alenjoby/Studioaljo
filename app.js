@@ -1,11 +1,10 @@
 require("dotenv").config(); // Must be at the very top
-const generateRouter = require("./routes/generate");
 const express = require("express");
 const mongoose = require("mongoose");
 const path = require("path");
 const User = require("./models/user");
 const usersRouter = require("./routes/users"); // Import routes once
-const geminiRouter = require("./routes/gemini");
+const aiRouter = require("./routes/ai");
 const {
   requireAuth,
   verifyAdmin,
@@ -25,9 +24,7 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 // 3. Connect Routes
 // This connects your Gemini 2.5 logic and User logic
 app.use("/users", usersRouter);
-
-app.use("/api/generate", generateRouter);
-app.use("/api/gemini", geminiRouter);
+app.use("/api", aiRouter);
 
 // MongoDB connection
 mongoose
@@ -64,6 +61,9 @@ app.get("/admin/login", (req, res) => {
 app.get("/admin/dashboard", requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, "public/admin/admin.html"));
 });
+
+// User dashboard (protected)
+// (removed custom dashboard route added during this chat)
 
 // Redirect /admin to login
 app.get("/admin", (req, res) => {
