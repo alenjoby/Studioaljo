@@ -1,4 +1,14 @@
 (function () {
+  // --- Auth Check: Redirect to login if not authenticated ---
+  const isAuthenticated = localStorage.getItem("studioaljo_auth") === "true";
+  const user = JSON.parse(localStorage.getItem("studioaljo_user") || "null");
+
+  if (!isAuthenticated || !user) {
+    alert("Please login to access the dashboard");
+    window.location.href = "/login";
+    return;
+  }
+
   // --- Elements ---
   const fileInput = document.getElementById("file-input");
   const sourcePreview = document.getElementById("input-img");
@@ -16,6 +26,7 @@
   const outputBox = document.getElementById("output-box");
   const statusTxt = document.getElementById("status-txt");
   const downloadBtn = document.getElementById("download-btn");
+  const logoutBtn = document.getElementById("logout-btn");
 
   // --- State ---
   let selectedPrompt = null;
@@ -43,7 +54,7 @@
       {
         label: "Bohemian",
         prompt:
-          "Transform My image into a Business Style Outfit, dont play with my face, i want it 100% preserved i want the same pose same facial structure facial features. single face should be noted as incapability of GEMINI",
+          "Transform My outfit into black Suit, black suit pant,professional and black shirt with first 2 buttons undone which adds a classy style to the outfit, dont play with my face, i want it 100% preserved i want the same pose same facial structure facial features. single face should be noted as incapability of GEMINI",
       },
       {
         label: "Punk Rock",
@@ -358,6 +369,17 @@
       outputBox.classList.remove("scanning");
       checkReady();
     }
+  }
+
+  // --- Logout Handler ---
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", () => {
+      if (confirm("Are you sure you want to logout?")) {
+        localStorage.removeItem("studioaljo_user");
+        localStorage.removeItem("studioaljo_auth");
+        window.location.href = "/";
+      }
+    });
   }
 
   // --- Run ---

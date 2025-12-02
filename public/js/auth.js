@@ -85,6 +85,7 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
       // Login successful
       // Store user data in localStorage
       localStorage.setItem("studioaljo_user", JSON.stringify(data.user));
+      localStorage.setItem("studioaljo_auth", "true");
       // Redirect to dashboard
       window.location.href = "/dashboard";
     } else {
@@ -129,7 +130,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
   }
 
   // Show loading state
-  const submitButton = document.querySelector("#signupForm .submit-btn");
+  const submitButton = document.querySelector("#signupForm .btn");
   const originalButtonText = submitButton.textContent;
   submitButton.textContent = "Creating account...";
   submitButton.disabled = true;
@@ -193,7 +194,7 @@ document.getElementById("signupForm").addEventListener("submit", async (e) => {
     console.error("Signup error:", error);
   } finally {
     // Reset loading state
-    const submitButton = document.querySelector("#signupForm .submit-btn");
+    const submitButton = document.querySelector("#signupForm .btn");
     if (submitButton) {
       submitButton.textContent = originalButtonText;
       submitButton.disabled = false;

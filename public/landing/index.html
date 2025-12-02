@@ -8,27 +8,27 @@
     <link rel="stylesheet" href="/landing/style.theme.css?v=2" />
   </head>
   <body>
-    <div class="container">
-      <!-- Navbar -->
-      <nav class="navbar">
-        <div class="nav-brand">
-          <img
-            src="/assets/images/logo white.png"
-            alt="Studioaljo"
-            class="logo"
-          />
+    <!-- Replaced navbar with GSAP nav-pill header -->
+    <header>
+      <div class="nav-pill">
+        <div class="logo">
+          <img src="/assets/images/logo white.png" alt="Studioaljo" />
         </div>
-        <div class="nav-menu">
+        <nav class="nav-links">
           <a href="#features">Features</a>
-          <a href="#tools">Tools</a>
-          <a href="#pricing">Pricing</a>
+          <a href="#how-it-works">Tools</a>
           <a href="#testimonials">Testimonials</a>
-        </div>
-        <div class="nav-actions">
-          <a href="/login" class="btn-launch">Launch →</a>
-        </div>
-      </nav>
+          <a
+            href="/login"
+            class="btn btn-primary"
+            style="padding: 10px 24px; font-size: 0.9rem"
+            >Get Started</a
+          >
+        </nav>
+      </div>
+    </header>
 
+    <div class="container">
       <!-- Hero Section -->
       <section class="hero">
         <!-- Floating Preview Cards -->
@@ -215,173 +215,88 @@
         </div>
       </section>
 
-      <!-- Features Section -->
-      <section id="features" class="section features-section">
-        <div class="section-header">
-          <span class="section-label">FEATURES</span>
-          <h2 class="section-title">AI at your fingertips</h2>
-          <p class="section-subtitle">
-            Transform photos instantly with our all-in-one AI studio.
-          </p>
-        </div>
-
-        <!-- Feature 1: AI Styling Studio -->
-        <div class="feature-showcase">
-          <div class="feature-showcase-content">
-            <div class="feature-showcase-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <rect
-                  x="3"
-                  y="3"
-                  width="18"
-                  height="18"
-                  rx="2"
-                  stroke="currentColor"
-                  stroke-width="2"
-                />
-                <path
-                  d="M9 9L15 15M15 9L9 15"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
+      <!-- Immersive GSAP Features Section -->
+      <section class="immersive" id="features">
+        <div class="immersive-container">
+          <div class="content-col">
+            <div class="content-block" data-index="0" data-color="#0A0A0A">
+              <i class="ph ph-coat-hanger"></i>
+              <h2>AI Styling Studio</h2>
+              <p>
+                Change hairstyles, outfits, or backgrounds instantly. Our engine
+                understands fabric physics and lighting to ensure photorealistic
+                try-ons.
+              </p>
             </div>
-            <h3 class="feature-showcase-title">AI Styling Studio</h3>
-            <p class="feature-showcase-desc">
-              Try new hairstyles, outfits, or backgrounds instantly with our
-              intelligent styling engine. Transform your look in seconds with
-              AI-powered style suggestions and effortless customization.
-            </p>
-          </div>
-          <div class="feature-showcase-preview">
-            <img src="/assets/images/ft1.png" alt="AI Styling Studio Preview" />
-          </div>
-        </div>
-
-        <!-- Feature 2: Room Makeover -->
-        <div class="feature-showcase feature-showcase-reverse">
-          <div class="feature-showcase-content">
-            <div class="feature-showcase-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <circle
-                  cx="12"
-                  cy="12"
-                  r="9"
-                  stroke="currentColor"
-                  stroke-width="2"
-                />
-                <path
-                  d="M12 6v12M6 12h12"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
+            <div class="content-block" data-index="1" data-color="#14100b">
+              <i class="ph ph-armchair"></i>
+              <h2>Room Makeover</h2>
+              <p>
+                Visualize your space in Mid-Century Modern or Zen styles. We
+                preserve the structural integrity of your room while completely
+                reimagining the decor.
+              </p>
             </div>
-            <h3 class="feature-showcase-title">Room Makeover</h3>
-            <p class="feature-showcase-desc">
-              Visualize your space in modern, minimalist, or zen styles with
-              AI-powered interior design. Get instant redesign suggestions and
-              see your room transform before your eyes.
-            </p>
-          </div>
-          <div class="feature-showcase-preview">
-            <img src="/assets/images/ft2.png" alt="Room Makeover Preview" />
-          </div>
-        </div>
-
-        <!-- Feature 3: Meme Maker -->
-        <div class="feature-showcase">
-          <div class="feature-showcase-content">
-            <div class="feature-showcase-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <rect
-                  x="3"
-                  y="3"
-                  width="18"
-                  height="18"
-                  rx="2"
-                  stroke="currentColor"
-                  stroke-width="2"
-                />
-                <path
-                  d="M8 10h.01M16 10h.01M8 14h8"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
+            <div class="content-block" data-index="2" data-color="#050a14">
+              <i class="ph ph-user-circle"></i>
+              <h2>Avatar Creator</h2>
+              <p>
+                Turn selfies into stylized digital art. From Cyberpunk to
+                Pixar-style 3D, create a consistent online persona across
+                platforms.
+              </p>
             </div>
-            <h3 class="feature-showcase-title">Meme Maker</h3>
-            <p class="feature-showcase-desc">
-              Add witty captions or design inspiring posters in seconds with
-              smart text placement. Create viral-worthy content with AI-assisted
-              caption suggestions and perfect typography.
-            </p>
-          </div>
-          <div class="feature-showcase-preview">
-            <img src="/assets/images/ft3.png" alt="Meme Maker Preview" />
-          </div>
-        </div>
-
-        <!-- Feature 4: AI Avatar Creator -->
-        <div class="feature-showcase feature-showcase-reverse">
-          <div class="feature-showcase-content">
-            <div class="feature-showcase-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <circle
-                  cx="12"
-                  cy="8"
-                  r="4"
-                  stroke="currentColor"
-                  stroke-width="2"
-                />
-                <path
-                  d="M6 21v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
+            <div class="content-block" data-index="3" data-color="#1a0f05">
+              <i class="ph ph-smiley-sticker"></i>
+              <h2>Viral Meme Maker</h2>
+              <p>
+                Design posters and memes with smart context awareness. The AI
+                suggests captions based on the image content for maximum
+                engagement.
+              </p>
             </div>
-            <h3 class="feature-showcase-title">AI Avatar Creator</h3>
-            <p class="feature-showcase-desc">
-              Turn your selfies into stylized digital art with multiple artistic
-              styles. Choose from dozens of unique art styles and create
-              stunning avatars for your social profiles.
-            </p>
-          </div>
-          <div class="feature-showcase-preview">
-            <img src="/assets/images/ft4.png" alt="AI Avatar Creator Preview" />
-          </div>
-        </div>
-
-        <!-- Feature 5: Background Remover -->
-        <div class="feature-showcase">
-          <div class="feature-showcase-content">
-            <div class="feature-showcase-icon">
-              <svg width="32" height="32" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                />
-              </svg>
+            <div class="content-block" data-index="4" data-color="#000000">
+              <i class="ph ph-eraser"></i>
+              <h2>Background Erase</h2>
+              <p>
+                Production-ready cutouts. We handle hair strands and transparent
+                objects with pixel-perfect precision. No green screen required.
+              </p>
             </div>
-            <h3 class="feature-showcase-title">Background Remover</h3>
-            <p class="feature-showcase-desc">
-              Remove backgrounds from any image with precision AI detection. Get
-              perfect cutouts in one click with advanced edge detection and
-              seamless background removal technology.
-            </p>
           </div>
-          <div class="feature-showcase-preview">
-            <img
-              src="/assets/images/ft5.png"
-              alt="Background Remover Preview"
-            />
+          <div class="visual-col">
+            <div class="visual-stack">
+              <img
+                src="/assets/images/ft1.png"
+                class="visual-img"
+                style="z-index: 1"
+                alt="Fashion"
+              />
+              <img
+                src="/assets/images/ft2.png"
+                class="visual-img"
+                style="z-index: 2"
+                alt="Interior"
+              />
+              <img
+                src="/assets/images/ft3.png"
+                class="visual-img"
+                style="z-index: 3"
+                alt="Portrait"
+              />
+              <img
+                src="/assets/images/ft2.png"
+                class="visual-img"
+                style="z-index: 4"
+                alt="Abstract"
+              />
+              <img
+                src="/assets/images/ft1.png"
+                class="visual-img"
+                style="z-index: 5"
+                alt="Object"
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -859,6 +774,13 @@
     </div>
 
     <script src="/js/admin-shortcut.js"></script>
+    <!-- GSAP / ScrollTrigger / Lenis for immersive section (load before module) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/gh/studio-freight/lenis@1.0.29/bundled/lenis.min.js"></script>
+    <!-- Phosphor Icons for immersive section -->
+    <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script type="module" src="/js/landing.js" defer></script>
+    <!-- immersive logic merged into /js/landing.js -->
   </body>
 </html>

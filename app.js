@@ -35,9 +35,6 @@ mongoose
     console.log("Please make sure MongoDB is running on localhost:27017");
   });
 
-// Serve static files (CSS, JS, images, etc.)
-app.use(express.static(path.join(__dirname, "public")));
-
 // ==========================
 // PAGE ROUTES
 // ==========================
@@ -62,13 +59,30 @@ app.get("/admin/dashboard", requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, "public/admin/admin.html"));
 });
 
-// User dashboard (protected)
-// (removed custom dashboard route added during this chat)
+// User dashboard (protected - check auth via localStorage on client side)
+app.get("/dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/dashboard/dashboard.html"));
+});
 
 // Redirect /admin to login
 app.get("/admin", (req, res) => {
   res.redirect("/admin/login");
 });
+
+// Block direct access to protected HTML files
+app.use((req, res, next) => {
+  // Block direct access to dashboard.html and admin.html
+  if (
+    req.path === "/dashboard/dashboard.html" ||
+    req.path === "/admin/admin.html"
+  ) {
+    return res.status(403).send("Access denied. Please use the proper route.");
+  }
+  next();
+});
+
+// Serve static files AFTER route definitions to prevent index.html override
+app.use(express.static(path.join(__dirname, "public")));
 
 // ==========================
 // API ROUTES (AUTH)
