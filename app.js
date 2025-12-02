@@ -27,7 +27,8 @@ app.use("/users", usersRouter);
 app.use("/api", aiRouter);
 
 // MongoDB connection
-const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/STUDIOALJO";
+const MONGODB_URI =
+  process.env.MONGODB_URI || "mongodb://localhost:27017/STUDIOALJO";
 mongoose
   .connect(MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
