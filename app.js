@@ -14,7 +14,7 @@ const {
 
 // 1. Initialize the App FIRST (Before using app.use)
 const app = express();
-const port = 3500;
+const port = process.env.PORT || 3500;
 
 // 2. Middleware
 // CRITICAL: Increased limit to 50mb to handle Image Uploads (Base64)
@@ -27,8 +27,9 @@ app.use("/users", usersRouter);
 app.use("/api", aiRouter);
 
 // MongoDB connection
+const MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost:27017/STUDIOALJO";
 mongoose
-  .connect("mongodb://localhost:27017/STUDIOALJO")
+  .connect(MONGODB_URI)
   .then(() => console.log("MongoDB connected"))
   .catch((err) => {
     console.error("MongoDB connection error:", err);
