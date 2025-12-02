@@ -307,27 +307,3 @@ tr:last-child {
 tbody tr:hover {
   background: rgba(255, 107, 0, 0.02);
 }
-
-/* Responsive */
-@media (max-width: 768px) {
-  .navbar {
-    padding: 12px 20px;
-    top: 10px;
-  }
-
-  .brand {
-    font-size: 16px;
-  }
-
-  h1 {
-    font-size: 36px;
-  }
-
-  h2 {
-    font-size: 28px;
-  }
-
-  .card {
-    padding: 24px;
-  }
-}
