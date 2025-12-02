@@ -86,6 +86,12 @@ document.getElementById("loginForm").addEventListener("submit", async (e) => {
       // Store user data in localStorage
       localStorage.setItem("studioaljo_user", JSON.stringify(data.user));
       localStorage.setItem("studioaljo_auth", "true");
+      // Also set a lightweight auth cookie for server-side gating
+      // Expires in 7 days, scoped to site root
+      document.cookie =
+        "studioaljo_auth=true; Max-Age=" +
+        7 * 24 * 60 * 60 +
+        "; Path=/; SameSite=Lax";
       // Redirect to dashboard
       window.location.href = "/dashboard";
     } else {

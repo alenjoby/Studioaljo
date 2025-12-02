@@ -24,7 +24,9 @@ app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 // 3. Connect Routes
 // This connects your Gemini 2.5 logic and User logic
 app.use("/users", usersRouter);
+// Support both legacy /api and current /api/images paths
 app.use("/api", aiRouter);
+app.use("/api/images", aiRouter);
 
 // MongoDB connection
 const MONGODB_URI =
@@ -61,8 +63,15 @@ app.get("/admin/dashboard", requireAuth, (req, res) => {
   res.sendFile(path.join(__dirname, "public/admin/admin.html"));
 });
 
-// User dashboard (protected - check auth via localStorage on client side)
+// User dashboard (protected)
 app.get("/dashboard", (req, res) => {
+  const cookie = req.headers.cookie || "";
+  const hasAuthCookie = cookie
+    .split(";")
+    .some((c) => c.trim().startsWith("studioaljo_auth=true"));
+  if (!hasAuthCookie) {
+    return res.redirect("/login");
+  }
   res.sendFile(path.join(__dirname, "public/dashboard/dashboard.html"));
 });
 

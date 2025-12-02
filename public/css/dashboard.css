@@ -675,12 +675,20 @@ h4,
 .generating-active .btn-generate {
   color: white;
   border-color: #333;
+  background: transparent; /* prevent any inner fill during progress */
 }
 
 .generating-active .progress-fill {
   opacity: 1;
+  background: transparent; /* ensure only glow shows, no fill */
 }
 
 .generating-active #btn-text-label {
   color: white;
+}
+
+/* Prevent hover fill while generating */
+.generating-active .btn-generate:hover {
+  background: transparent;
+  box-shadow: none;
 }

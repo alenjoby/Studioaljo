@@ -724,6 +724,8 @@
       if (confirm("Are you sure you want to logout?")) {
         localStorage.removeItem("studioaljo_user");
         localStorage.removeItem("studioaljo_auth");
+        // Clear auth cookie
+        document.cookie = "studioaljo_auth=; Max-Age=0; Path=/; SameSite=Lax";
         window.location.href = "/";
       }
     });
