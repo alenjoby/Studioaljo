@@ -47,7 +47,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   }
 
   // Hide add user form initially
-  document.getElementById("addUserSection").style.display = "none";
+  document.getElementById("addUserSection").classList.add("hidden");
 
   // Load users when the page loads
   await loadUsers();
@@ -72,7 +72,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 // Show add user form
 function showAddUserForm() {
-  document.getElementById("addUserSection").style.display = "block";
+  document.getElementById("addUserSection").classList.remove("hidden");
   document.getElementById("editUserSection").classList.add("hidden");
   // Scroll to the form
   document
@@ -82,7 +82,7 @@ function showAddUserForm() {
 
 // Hide add user form
 function hideAddUserForm() {
-  document.getElementById("addUserSection").style.display = "none";
+  document.getElementById("addUserSection").classList.add("hidden");
   document.getElementById("addUserForm").reset();
 }
 
@@ -104,7 +104,6 @@ function showEditUserForm(user) {
 // Hide edit user form
 function hideEditUserForm() {
   document.getElementById("editUserSection").classList.add("hidden");
-  document.getElementById("addUserSection").classList.remove("hidden");
   document.getElementById("editUserForm").reset();
 }
 
@@ -141,6 +140,7 @@ async function handleAddUser(e) {
     if (response.ok) {
       showNotification("User added successfully!", "success");
       document.getElementById("addUserForm").reset();
+      hideAddUserForm();
       await loadUsers(); // Refresh the user list
     } else {
       const errorData = await response.json();
