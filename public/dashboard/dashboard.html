@@ -22,14 +22,6 @@
         <button class="icon-btn" id="back-btn" aria-label="Back">
           <i data-lucide="chevron-left"></i>
         </button>
-        <button
-          class="icon-btn"
-          id="logout-btn"
-          aria-label="Logout"
-          title="Logout"
-        >
-          <i data-lucide="log-out"></i>
-        </button>
         <div class="profile-avatar">
           <img
             src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
@@ -94,9 +86,9 @@
             <button
               class="rail-btn"
               type="button"
-              data-prompt="Background Remover: Upload an image. Automatically removes background and outputs a clean PNG with transparency."
+              data-prompt="Virtual Outfit Try-On: Upload your photo and an outfit image. AI will dress you in the uploaded outfit while preserving your face and pose."
             >
-              BG Remover
+              Outfit Try-On
             </button>
           </aside>
 
@@ -111,9 +103,9 @@
 
         <!-- Center Panels -->
         <section class="panels">
-          <div class="canvas-container">
-            <!-- Source Input -->
-            <div class="viewport">
+          <div class="canvas-container" id="canvas-container">
+            <!-- Source Input (Used for single-image tools) -->
+            <div class="viewport" id="single-upload-zone">
               <div class="viewport-label">
                 <span>SOURCE INPUT</span>
                 <span class="res-badge hidden" id="img-res">0x0</span>
@@ -145,6 +137,110 @@
 
                 <button
                   id="clear-btn"
+                  class="hidden"
+                  style="
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: rgba(0, 0, 0, 0.6);
+                    color: white;
+                    border: none;
+                    padding: 5px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    z-index: 50;
+                  "
+                >
+                  <i data-lucide="x" style="width: 14px"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Person Photo Upload (For outfit try-on) -->
+            <div class="viewport hidden" id="person-upload-zone">
+              <div class="viewport-label">
+                <span>YOUR PHOTO</span>
+                <span class="res-badge hidden" id="person-res">0x0</span>
+              </div>
+              <div class="viewport-box" id="person-drop-zone">
+                <div class="bracket tl"></div>
+                <div class="bracket tr"></div>
+                <div class="bracket bl"></div>
+                <div class="bracket br"></div>
+
+                <input
+                  type="file"
+                  id="person-file-input"
+                  class="hidden"
+                  accept="image/*"
+                />
+
+                <div class="upload-content" id="person-upload-ui">
+                  <i data-lucide="user" class="upload-icon"></i>
+                  <h4 style="font-size: 14px; margin-bottom: 5px">
+                    Upload Your Photo
+                  </h4>
+                  <p style="font-size: 10px; color: #555">
+                    Full body recommended
+                  </p>
+                </div>
+
+                <img id="person-img" class="display-img hidden" alt="" />
+
+                <button
+                  id="person-clear-btn"
+                  class="hidden"
+                  style="
+                    position: absolute;
+                    top: 10px;
+                    right: 10px;
+                    background: rgba(0, 0, 0, 0.6);
+                    color: white;
+                    border: none;
+                    padding: 5px;
+                    border-radius: 4px;
+                    cursor: pointer;
+                    z-index: 50;
+                  "
+                >
+                  <i data-lucide="x" style="width: 14px"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Outfit Photo Upload (For outfit try-on) -->
+            <div class="viewport hidden" id="outfit-upload-zone">
+              <div class="viewport-label">
+                <span>OUTFIT PHOTO</span>
+                <span class="res-badge hidden" id="outfit-res">0x0</span>
+              </div>
+              <div class="viewport-box" id="outfit-drop-zone">
+                <div class="bracket tl"></div>
+                <div class="bracket tr"></div>
+                <div class="bracket bl"></div>
+                <div class="bracket br"></div>
+
+                <input
+                  type="file"
+                  id="outfit-file-input"
+                  class="hidden"
+                  accept="image/*"
+                />
+
+                <div class="upload-content" id="outfit-upload-ui">
+                  <i data-lucide="shirt" class="upload-icon"></i>
+                  <h4 style="font-size: 14px; margin-bottom: 5px">
+                    Upload Outfit
+                  </h4>
+                  <p style="font-size: 10px; color: #555">
+                    Clothing item or full outfit
+                  </p>
+                </div>
+
+                <img id="outfit-img" class="display-img hidden" alt="" />
+
+                <button
+                  id="outfit-clear-btn"
                   class="hidden"
                   style="
                     position: absolute;
@@ -284,9 +380,16 @@
       </section>
 
       <div class="cta">
-        <button id="generate-btn" class="btn btn-primary btn-generate">
-          GENERATE
-        </button>
+        <div class="btn-container" id="btn-container">
+          <div class="progress-fill" id="progress-bar"></div>
+          <div class="btn-text-wrapper">
+            <span id="btn-text-label">GENERATE</span>
+          </div>
+          <button
+            id="generate-btn"
+            class="btn btn-primary btn-generate"
+          ></button>
+        </div>
         <div class="error-message" id="error-box"></div>
       </div>
     </main>

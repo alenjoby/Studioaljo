@@ -39,7 +39,7 @@
       .navbar {
         display: flex;
         align-items: center;
-        justify-content: space-between;
+        justify-content: flex-end;
         padding: 16px 32px;
         position: sticky;
         top: 20px;
@@ -53,6 +53,25 @@
         max-width: 1300px;
         box-shadow: 0 8px 32px rgba(255, 107, 0, 0.08),
           0 2px 8px rgba(0, 0, 0, 0.04);
+      }
+
+      .back-btn {
+        padding: 10px 20px;
+        background: rgba(255, 107, 0, 0.1);
+        color: var(--orange);
+        border: 1px solid rgba(255, 107, 0, 0.2);
+        border-radius: 12px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.2s ease;
+        font-family: inherit;
+      }
+
+      .back-btn:hover {
+        background: var(--orange);
+        color: white;
+        transform: translateX(-2px);
       }
 
       main {
@@ -163,6 +182,12 @@
     </style>
   </head>
   <body>
+    <nav class="navbar">
+      <button class="back-btn" onclick="window.location.href='/'">
+        ← Back to Home
+      </button>
+    </nav>
+
     <main>
       <div class="login-card">
         <div class="logo-container">

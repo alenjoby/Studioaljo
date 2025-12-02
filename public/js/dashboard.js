@@ -26,12 +26,52 @@
   const outputBox = document.getElementById("output-box");
   const statusTxt = document.getElementById("status-txt");
   const downloadBtn = document.getElementById("download-btn");
-  const logoutBtn = document.getElementById("logout-btn");
+  const backBtn = document.getElementById("back-btn");
+  const btnContainer = document.getElementById("btn-container");
+  const progressBar = document.getElementById("progress-bar");
+  const btnTextLabel = document.getElementById("btn-text-label");
+  const quotaPill = document.getElementById("quota-pill");
 
   // --- State ---
   let selectedPrompt = null;
   let imageFile = null;
+  let personImageFile = null;
+  let outfitImageFile = null;
   let activeTool = "ai-styling";
+
+  // --- Quota Management ---
+  function getQuotaKey() {
+    const today = new Date().toISOString().split("T")[0];
+    return `studioaljo_quota_${user.email}_${today}`;
+  }
+
+  function getQuotaUsed() {
+    return parseInt(localStorage.getItem(getQuotaKey()) || "0");
+  }
+
+  function incrementQuota() {
+    const current = getQuotaUsed();
+    localStorage.setItem(getQuotaKey(), (current + 1).toString());
+    updateQuotaDisplay();
+  }
+
+  function updateQuotaDisplay() {
+    const used = getQuotaUsed();
+    const remaining = 10 - used;
+    quotaPill.textContent = `${remaining}/10 Generations Available Today`;
+
+    if (remaining <= 0) {
+      quotaPill.style.borderColor = "red";
+      quotaPill.style.color = "red";
+    } else if (remaining <= 3) {
+      quotaPill.style.borderColor = "orange";
+      quotaPill.style.color = "orange";
+    }
+  }
+
+  function checkQuotaLimit() {
+    return getQuotaUsed() >= 10;
+  }
 
   // --- Tool -> Styles definitions ---
   const TOOL_SETS = {
@@ -143,16 +183,11 @@
           "Convert selfie to pixel art avatar at medium resolution, clear facial cues retained.",
       },
     ],
-    "bg-remover": [
+    "outfit-tryon": [
       {
-        label: "Clean PNG",
-        prompt:
-          "Remove background and output clean transparent PNG while preserving subject edges.",
-      },
-      {
-        label: "Soft Shadow",
-        prompt:
-          "Remove background and add subtle soft shadow beneath subject on transparent canvas.",
+        label: "Try On",
+        prompt: "FIXED_PROMPT",
+        isFixed: true,
       },
     ],
   };
@@ -178,7 +213,7 @@
         "room makeover": "room-makeover",
         "meme maker": "meme-maker",
         "ai avatar generator": "ai-avatar",
-        "bg remover": "bg-remover",
+        "outfit try-on": "outfit-tryon",
       };
       const nextTool = map[label] || "ai-styling";
 
@@ -245,6 +280,95 @@
 
     // Generate Button
     generateBtn.addEventListener("click", generate);
+
+    // Dual-image upload for outfit try-on
+    const personDropZone = document.getElementById("person-drop-zone");
+    const personFileInput = document.getElementById("person-file-input");
+    const personPreview = document.getElementById("person-img");
+    const personUploadUi = document.getElementById("person-upload-ui");
+    const personClearBtn = document.getElementById("person-clear-btn");
+    const personRes = document.getElementById("person-res");
+
+    const outfitDropZone = document.getElementById("outfit-drop-zone");
+    const outfitFileInput = document.getElementById("outfit-file-input");
+    const outfitPreview = document.getElementById("outfit-img");
+    const outfitUploadUi = document.getElementById("outfit-upload-ui");
+    const outfitClearBtn = document.getElementById("outfit-clear-btn");
+    const outfitRes = document.getElementById("outfit-res");
+
+    // Person upload click
+    personDropZone.addEventListener("click", (e) => {
+      if (e.target.closest("#person-clear-btn")) return;
+      if (!personImageFile) personFileInput.click();
+    });
+    personFileInput.addEventListener("change", (e) =>
+      handlePersonFile(e.target.files[0])
+    );
+
+    // Outfit upload click
+    outfitDropZone.addEventListener("click", (e) => {
+      if (e.target.closest("#outfit-clear-btn")) return;
+      if (!outfitImageFile) outfitFileInput.click();
+    });
+    outfitFileInput.addEventListener("change", (e) =>
+      handleOutfitFile(e.target.files[0])
+    );
+
+    // Person drag and drop
+    personDropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      personDropZone.style.borderColor = "var(--orange)";
+    });
+    personDropZone.addEventListener("dragleave", (e) => {
+      e.preventDefault();
+      personDropZone.style.borderColor = "#222";
+    });
+    personDropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      personDropZone.style.borderColor = "#222";
+      handlePersonFile(e.dataTransfer.files[0]);
+    });
+
+    // Outfit drag and drop
+    outfitDropZone.addEventListener("dragover", (e) => {
+      e.preventDefault();
+      outfitDropZone.style.borderColor = "var(--orange)";
+    });
+    outfitDropZone.addEventListener("dragleave", (e) => {
+      e.preventDefault();
+      outfitDropZone.style.borderColor = "#222";
+    });
+    outfitDropZone.addEventListener("drop", (e) => {
+      e.preventDefault();
+      outfitDropZone.style.borderColor = "#222";
+      handleOutfitFile(e.dataTransfer.files[0]);
+    });
+
+    // Person clear button
+    personClearBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      personImageFile = null;
+      personFileInput.value = "";
+      personPreview.classList.add("hidden");
+      personPreview.src = "";
+      personUploadUi.classList.remove("hidden");
+      personClearBtn.classList.add("hidden");
+      personRes.classList.add("hidden");
+      checkReady();
+    });
+
+    // Outfit clear button
+    outfitClearBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      outfitImageFile = null;
+      outfitFileInput.value = "";
+      outfitPreview.classList.add("hidden");
+      outfitPreview.src = "";
+      outfitUploadUi.classList.remove("hidden");
+      outfitClearBtn.classList.add("hidden");
+      outfitRes.classList.add("hidden");
+      checkReady();
+    });
   }
   function setTool(toolKey) {
     activeTool = toolKey;
@@ -258,6 +382,26 @@
           )}">${it.label}</button>`
       )
       .join("");
+
+    // Toggle between single and dual upload layouts
+    const singleUploadZone = document.getElementById("single-upload-zone");
+    const personUploadZone = document.getElementById("person-upload-zone");
+    const outfitUploadZone = document.getElementById("outfit-upload-zone");
+    const canvasContainer = document.getElementById("canvas-container");
+
+    if (toolKey === "outfit-tryon") {
+      // Show dual upload zones
+      singleUploadZone.classList.add("hidden");
+      personUploadZone.classList.remove("hidden");
+      outfitUploadZone.classList.remove("hidden");
+      canvasContainer.style.gridTemplateColumns = "1fr 1fr 1fr";
+    } else {
+      // Show single upload zone
+      singleUploadZone.classList.remove("hidden");
+      personUploadZone.classList.add("hidden");
+      outfitUploadZone.classList.add("hidden");
+      canvasContainer.style.gridTemplateColumns = "1fr 1fr";
+    }
 
     // Reset selected prompt when tool changes
     selectedPrompt = null;
@@ -302,8 +446,84 @@
     reader.readAsDataURL(file);
   }
 
+  function handlePersonFile(file) {
+    if (!file || !file.type.startsWith("image/")) {
+      showError("Unsupported file type. Please use an image.");
+      return;
+    }
+    showError("");
+    personImageFile = file;
+
+    const personPreview = document.getElementById("person-img");
+    const personUploadUi = document.getElementById("person-upload-ui");
+    const personClearBtn = document.getElementById("person-clear-btn");
+    const personRes = document.getElementById("person-res");
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      personPreview.src = e.target.result;
+
+      const i = new Image();
+      i.src = e.target.result;
+      i.onload = () => {
+        personRes.innerText = `${i.naturalWidth} x ${i.naturalHeight} PX`;
+        personRes.classList.remove("hidden");
+      };
+
+      personPreview.classList.remove("hidden");
+      personUploadUi.classList.add("hidden");
+      personClearBtn.classList.remove("hidden");
+      checkReady();
+    };
+    reader.readAsDataURL(file);
+  }
+
+  function handleOutfitFile(file) {
+    if (!file || !file.type.startsWith("image/")) {
+      showError("Unsupported file type. Please use an image.");
+      return;
+    }
+    showError("");
+    outfitImageFile = file;
+
+    const outfitPreview = document.getElementById("outfit-img");
+    const outfitUploadUi = document.getElementById("outfit-upload-ui");
+    const outfitClearBtn = document.getElementById("outfit-clear-btn");
+    const outfitRes = document.getElementById("outfit-res");
+
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      outfitPreview.src = e.target.result;
+
+      const i = new Image();
+      i.src = e.target.result;
+      i.onload = () => {
+        outfitRes.innerText = `${i.naturalWidth} x ${i.naturalHeight} PX`;
+        outfitRes.classList.remove("hidden");
+      };
+
+      outfitPreview.classList.remove("hidden");
+      outfitUploadUi.classList.add("hidden");
+      outfitClearBtn.classList.remove("hidden");
+      checkReady();
+    };
+    reader.readAsDataURL(file);
+  }
+
   function checkReady() {
-    generateBtn.disabled = !(imageFile && selectedPrompt);
+    const quotaExceeded = checkQuotaLimit();
+
+    if (quotaExceeded) {
+      generateBtn.disabled = true;
+      showError("Daily quota limit reached (10/10). Come back tomorrow!");
+      return;
+    }
+
+    if (activeTool === "outfit-tryon") {
+      generateBtn.disabled = !(personImageFile && outfitImageFile);
+    } else {
+      generateBtn.disabled = !(imageFile && selectedPrompt);
+    }
   }
 
   function showError(message) {
@@ -313,6 +533,103 @@
 
   // --- API Call ---
   async function generate() {
+    // Check quota limit
+    if (checkQuotaLimit()) {
+      showError("Daily quota limit reached (10/10). Come back tomorrow!");
+      return;
+    }
+
+    // Outfit Try-On Logic
+    if (activeTool === "outfit-tryon") {
+      if (!personImageFile) {
+        showError("Please upload your photo first.");
+        return;
+      }
+      if (!outfitImageFile) {
+        showError("Please upload an outfit photo.");
+        return;
+      }
+
+      showError("");
+      generateBtn.disabled = true;
+      btnContainer.classList.add("generating-active");
+      outputImage.classList.add("hidden");
+      awaitingOutput.style.opacity = "0";
+      statusTxt.innerText = "GENERATING";
+      statusTxt.style.color = "var(--orange)";
+      outputBox.classList.add("scanning");
+
+      // Simulated Progress Bar Animation
+      let progress = 0;
+      const progressInterval = setInterval(() => {
+        if (progress < 90) {
+          progress += Math.random() * 5;
+          if (progress > 90) progress = 90;
+          progressBar.style.width = `${progress}%`;
+          btnTextLabel.innerText = `GENERATING ${Math.floor(progress)}%`;
+        }
+      }, 100);
+
+      try {
+        const fd = new FormData();
+        fd.append("personImage", personImageFile);
+        fd.append("outfitImage", outfitImageFile);
+
+        const res = await fetch("/api/images/outfit-tryon", {
+          method: "POST",
+          body: fd,
+        });
+
+        if (!res.ok) {
+          const err = await res.json().catch(() => ({ error: "Server error" }));
+          throw new Error(err.error || `HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        const { dataUrl } = data;
+
+        clearInterval(progressInterval);
+        progressBar.style.width = "100%";
+        btnTextLabel.innerText = "COMPLETE";
+
+        // Small delay to show 100%
+        setTimeout(() => {
+          outputImage.src = dataUrl;
+          outputImage.classList.remove("hidden");
+          downloadBtn.href = dataUrl;
+          downloadBtn.classList.remove("hidden");
+          statusTxt.innerText = "COMPLETE";
+          statusTxt.style.color = "#00ff00";
+          awaitingOutput.classList.add("hidden");
+          outputBox.classList.remove("scanning");
+          btnContainer.classList.remove("generating-active");
+
+          // Increment quota after successful generation
+          incrementQuota();
+        }, 500);
+      } catch (err) {
+        clearInterval(progressInterval);
+        btnTextLabel.innerText = "ERROR";
+        progressBar.style.backgroundColor = "red";
+        showError(err.message || "Failed to generate outfit try-on.");
+        statusTxt.innerText = "FAILED";
+        statusTxt.style.color = "red";
+        awaitingOutput.style.opacity = "0.3";
+        awaitingOutput.classList.remove("hidden");
+        outputBox.classList.remove("scanning");
+      } finally {
+        setTimeout(() => {
+          generateBtn.disabled = false;
+          progressBar.style.width = "0%";
+          progressBar.style.backgroundColor = "var(--orange)";
+          btnTextLabel.innerText = "GENERATE";
+          checkReady();
+        }, 2000);
+      }
+      return;
+    }
+
+    // Existing logic for other tools
     if (!imageFile) {
       showError("Please upload an image first.");
       return;
@@ -325,12 +642,23 @@
     // --- Start UI ---
     showError("");
     generateBtn.disabled = true;
-    generateBtn.textContent = "Generating…";
+    btnContainer.classList.add("generating-active");
     outputImage.classList.add("hidden");
     awaitingOutput.style.opacity = "0";
     statusTxt.innerText = "GENERATING";
     statusTxt.style.color = "var(--orange)";
     outputBox.classList.add("scanning");
+
+    // Simulated Progress Bar Animation
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      if (progress < 90) {
+        progress += Math.random() * 5;
+        if (progress > 90) progress = 90;
+        progressBar.style.width = `${progress}%`;
+        btnTextLabel.innerText = `GENERATING ${Math.floor(progress)}%`;
+      }
+    }, 100);
 
     try {
       const fd = new FormData();
@@ -347,33 +675,52 @@
       const data = await res.json();
       const { dataUrl } = data;
 
-      // --- Success UI ---
-      outputImage.src = dataUrl;
-      outputImage.classList.remove("hidden");
-      downloadBtn.href = dataUrl;
-      downloadBtn.classList.remove("hidden");
-      statusTxt.innerText = "COMPLETE";
-      statusTxt.style.color = "#00ff00";
-      awaitingOutput.classList.add("hidden");
+      clearInterval(progressInterval);
+      progressBar.style.width = "100%";
+      btnTextLabel.innerText = "COMPLETE";
+
+      // Small delay to show 100%
+      setTimeout(() => {
+        // --- Success UI ---
+        outputImage.src = dataUrl;
+        outputImage.classList.remove("hidden");
+        downloadBtn.href = dataUrl;
+        downloadBtn.classList.remove("hidden");
+        statusTxt.innerText = "COMPLETE";
+        statusTxt.style.color = "#00ff00";
+        awaitingOutput.classList.add("hidden");
+        outputBox.classList.remove("scanning");
+        btnContainer.classList.remove("generating-active");
+
+        // Increment quota after successful generation
+        incrementQuota();
+      }, 500);
     } catch (err) {
       // --- Error UI ---
+      clearInterval(progressInterval);
+      btnTextLabel.innerText = "ERROR";
+      progressBar.style.backgroundColor = "red";
       showError(err.message || "Failed to generate image.");
       statusTxt.innerText = "FAILED";
       statusTxt.style.color = "red";
       awaitingOutput.style.opacity = "0.3";
       awaitingOutput.classList.remove("hidden");
+      outputBox.classList.remove("scanning");
     } finally {
       // --- Final UI State ---
-      generateBtn.disabled = false;
-      generateBtn.textContent = "GENERATE";
-      outputBox.classList.remove("scanning");
-      checkReady();
+      setTimeout(() => {
+        generateBtn.disabled = false;
+        progressBar.style.width = "0%";
+        progressBar.style.backgroundColor = "var(--orange)";
+        btnTextLabel.innerText = "GENERATE";
+        checkReady();
+      }, 2000);
     }
   }
 
-  // --- Logout Handler ---
-  if (logoutBtn) {
-    logoutBtn.addEventListener("click", () => {
+  // --- Back/Logout Handler ---
+  if (backBtn) {
+    backBtn.addEventListener("click", () => {
       if (confirm("Are you sure you want to logout?")) {
         localStorage.removeItem("studioaljo_user");
         localStorage.removeItem("studioaljo_auth");
@@ -386,4 +733,6 @@
   init();
   // Initialize default tool styles
   setTool(activeTool);
+  // Initialize quota display
+  updateQuotaDisplay();
 })();

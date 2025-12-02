@@ -152,6 +152,13 @@ app.post("/login", async (req, res) => {
   }
 });
 
+// ==========================
+// 404 ERROR HANDLER (MUST BE LAST)
+// ==========================
+app.use((req, res, next) => {
+  res.status(404).sendFile(path.join(__dirname, "public/404.html"));
+});
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });
