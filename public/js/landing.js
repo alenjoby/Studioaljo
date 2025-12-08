@@ -1,3 +1,87 @@
+// ============================
+// VIDEO SCRUB ON SCROLL - GSAP ScrollTrigger
+// ============================
+function initHeroVideoScrub() {
+  const video = document.querySelector("#hero-video");
+  const heroSection = document.querySelector("#hero-section");
+
+  if (!video || !heroSection) {
+    console.warn("Hero video or section not found");
+    return;
+  }
+
+  // Wait for video metadata to load to get accurate duration
+  video.addEventListener("loadedmetadata", () => {
+    console.log(`Video loaded: duration = ${video.duration}s`);
+
+    // Register ScrollTrigger plugin
+    gsap.registerPlugin(ScrollTrigger);
+
+    // Create ScrollTrigger without animation - we'll control video directly
+    ScrollTrigger.create({
+      trigger: heroSection,
+      start: "top top",
+      end: "+=400%", // Pin for 400vh of scrolling
+      pin: true,
+      markers: false, // Set to true for debugging
+      onUpdate: (self) => {
+        // Directly update video currentTime based on scroll progress
+        if (video && video.duration) {
+          video.currentTime = video.duration * self.progress;
+          // Prevent video from playing on its own
+          if (!video.paused) {
+            video.pause();
+          }
+        }
+      },
+    });
+
+    console.log("Hero video scrub initialized successfully");
+  });
+
+  // Ensure video is paused and ready
+  video.pause();
+
+  // Handle video loading errors
+  video.addEventListener("error", (e) => {
+    console.error("Video failed to load:", e);
+  });
+
+  // Preload video
+  video.load();
+}
+
+// Initialize on DOM ready
+document.addEventListener("DOMContentLoaded", () => {
+  if (typeof gsap === "undefined") {
+    console.error("GSAP not loaded");
+    return;
+  }
+
+  try {
+    // If ScrollTrigger is available globally register it; otherwise continue
+    if (typeof ScrollTrigger !== "undefined") {
+      gsap.registerPlugin(ScrollTrigger);
+    }
+
+    initHeroVideoScrub();
+
+    // Small delay to ensure hero scrub is initialized before immersive section
+    setTimeout(() => {
+      try {
+        initImmersiveSection();
+      } catch (e) {
+        console.error("Failed to init immersive section:", e);
+      }
+    }, 200);
+  } catch (e) {
+    console.error("Error initializing GSAP features:", e);
+  }
+});
+
+// ============================
+// TYPEWRITER ANIMATION
+// ============================
 // Typewriter animation for generate input
 const prompts = [
   "Turn my photo into a watercolor painting",
@@ -268,83 +352,90 @@ function cubicFromTo(src, dst) {
 window.__toolsConnectorTeardown = teardown;
 
 // --- Immersive GSAP Section Logic ---
-(function initImmersive() {
-  function start() {
-    if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined")
-      return;
-    gsap.registerPlugin(ScrollTrigger);
+function initImmersiveSection() {
+  if (typeof gsap === "undefined" || typeof ScrollTrigger === "undefined") {
+    console.warn("GSAP or ScrollTrigger not available for immersive section");
+    return;
+  }
 
-    // Lenis (optional smooth scroll)
-    if (typeof Lenis !== "undefined") {
-      const lenis = new Lenis({
-        duration: 1.2,
-        easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
-        direction: "vertical",
-        smooth: true,
-      });
-      function raf(time) {
-        lenis.raf(time);
-        requestAnimationFrame(raf);
-      }
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Lenis (optional smooth scroll)
+  if (typeof Lenis !== "undefined") {
+    const lenis = new Lenis({
+      duration: 1.2,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      direction: "vertical",
+      smooth: true,
+    });
+    function raf(time) {
+      lenis.raf(time);
       requestAnimationFrame(raf);
     }
+    requestAnimationFrame(raf);
+  }
 
-    const blocks = document.querySelectorAll(".content-block");
-    const images = document.querySelectorAll(".visual-img");
-    const visualCol = document.querySelector(".visual-col");
+  const blocks = document.querySelectorAll(".content-block");
+  const images = document.querySelectorAll(".visual-img");
+  const visualCol = document.querySelector(".visual-col");
 
-    // Initial clip setup
-    images.forEach((img, i) => {
-      gsap.set(img, {
-        clipPath: i === 0 ? "inset(0% 0 0 0)" : "inset(100% 0 0 0)",
-      });
+  if (blocks.length === 0 || images.length === 0) {
+    console.warn("Immersive section elements not found");
+    return;
+  }
+
+  // Initial clip setup
+  images.forEach((img, i) => {
+    gsap.set(img, {
+      clipPath: i === 0 ? "inset(0% 0 0 0)" : "inset(100% 0 0 0)",
     });
+  });
 
-    // Refresh after load for layout correctness
-    window.addEventListener("load", () => ScrollTrigger.refresh());
+  // Refresh after load for layout correctness
+  window.addEventListener(
+    "load",
+    () => {
+      ScrollTrigger.refresh();
+    },
+    { once: true }
+  );
 
-    blocks.forEach((block, i) => {
-      // Active block indicator + background color tween
-      ScrollTrigger.create({
-        trigger: block,
-        start: "top center",
-        end: "bottom center",
-        onToggle: (self) => {
-          if (self.isActive) {
-            block.classList.add("active");
+  blocks.forEach((block, i) => {
+    // Active block indicator + background color tween
+    ScrollTrigger.create({
+      trigger: block,
+      start: "top center",
+      end: "bottom center",
+      onToggle: (self) => {
+        if (self.isActive) {
+          block.classList.add("active");
+          if (visualCol) {
             gsap.to(visualCol, {
               backgroundColor: block.dataset.color,
               duration: 0.5,
             });
-          } else {
-            block.classList.remove("active");
           }
+        } else {
+          block.classList.remove("active");
+        }
+      },
+    });
+
+    // Reveal subsequent images via scroll scrub
+    if (i > 0 && images[i]) {
+      const target = images[i];
+      gsap.to(target, {
+        clipPath: "inset(0% 0 0 0)",
+        ease: "none",
+        scrollTrigger: {
+          trigger: block,
+          start: "top bottom",
+          end: "top top",
+          scrub: true,
         },
       });
+    }
+  });
 
-      // Reveal subsequent images via scroll scrub
-      if (i > 0) {
-        const target = images[i];
-        gsap.to(target, {
-          clipPath: "inset(0% 0 0 0)",
-          ease: "none",
-          scrollTrigger: {
-            trigger: block,
-            start: "top bottom",
-            end: "top top",
-            scrub: true,
-          },
-        });
-      }
-    });
-  }
-
-  if (
-    document.readyState === "complete" ||
-    document.readyState === "interactive"
-  ) {
-    start();
-  } else {
-    document.addEventListener("DOMContentLoaded", start, { once: true });
-  }
-})();
+  console.log("Immersive section initialized successfully");
+}

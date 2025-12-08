@@ -9,6 +9,9 @@
     <link rel="stylesheet" href="/css/admin-panel.css" />
   </head>
   <body>
+    <video class="video-background" autoplay muted loop playsinline>
+      <source src="/assets/Video/login-logout.webm" type="video/webm" />
+    </video>
     <div class="container">
       <nav class="navbar">
         <div class="brand">
@@ -16,11 +19,77 @@
         </div>
         <div class="nav-actions">
           <button class="btn btn-primary" id="showAddUserForm">
-            Add New User
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M12 5v14M5 12h14" />
+            </svg>
+            Add User
           </button>
-          <button class="btn btn-outline" onclick="logout()">Logout</button>
+          <button class="btn btn-outline" onclick="logout()">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path
+                d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4M16 17l5-5-5-5M21 12H9"
+              />
+            </svg>
+            Logout
+          </button>
         </div>
       </nav>
+
+      <!-- Stats Dashboard -->
+      <div class="stats-grid">
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="9" cy="7" r="4" />
+              <path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75" />
+            </svg>
+          </div>
+          <div class="stat-value" id="totalUsers">0</div>
+          <div class="stat-label">Total Users</div>
+        </div>
+
+        <div class="stat-card">
+          <div class="stat-icon">
+            <svg
+              width="24"
+              height="24"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+            >
+              <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+              <circle cx="8.5" cy="7" r="4" />
+              <line x1="20" y1="8" x2="20" y2="14" />
+              <line x1="23" y1="11" x2="17" y2="11" />
+            </svg>
+          </div>
+          <div class="stat-value" id="newUsers">0</div>
+          <div class="stat-label">New This Week</div>
+        </div>
+      </div>
 
       <div id="notification" class="notification hidden"></div>
 
@@ -131,5 +200,62 @@
     </div>
     <script src="/js/admin-shortcut.js"></script>
     <script src="/js/admin-panel.js"></script>
+    <script>
+      // Interactive video background
+      (function () {
+        const video = document.querySelector(".video-background");
+        if (!video) return;
+
+        let mouseX = 0,
+          mouseY = 0,
+          targetPlaybackRate = 1,
+          currentPlaybackRate = 1;
+
+        document.addEventListener("mousemove", (e) => {
+          mouseX = e.clientX / window.innerWidth;
+          mouseY = e.clientY / window.innerHeight;
+          targetPlaybackRate = 0.5 + mouseX * 1.5;
+          const moveX = (mouseX - 0.5) * 20;
+          const moveY = (mouseY - 0.5) * 20;
+          video.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.1)`;
+          const brightness = 0.8 + mouseY * 0.4;
+          const saturation = 0.9 + mouseX * 0.3;
+          video.style.filter = `brightness(${brightness}) saturate(${saturation})`;
+        });
+
+        function updatePlaybackRate() {
+          currentPlaybackRate +=
+            (targetPlaybackRate - currentPlaybackRate) * 0.1;
+          video.playbackRate = currentPlaybackRate;
+          requestAnimationFrame(updatePlaybackRate);
+        }
+        updatePlaybackRate();
+
+        document.addEventListener("mouseleave", () => video.pause());
+        document.addEventListener("mouseenter", () => video.play());
+      })();
+
+      // Animate stats on load
+      function animateValue(id, start, end, duration) {
+        const obj = document.getElementById(id);
+        if (!obj) return;
+        const range = end - start;
+        const increment = end > start ? 1 : -1;
+        const stepTime = Math.abs(Math.floor(duration / range));
+        let current = start;
+        const timer = setInterval(() => {
+          current += increment;
+          obj.textContent = current;
+          if (current === end) clearInterval(timer);
+        }, stepTime);
+      }
+
+      // Trigger animations after users are loaded with real data
+      window.addEventListener("usersLoaded", (e) => {
+        const stats = e.detail || {};
+        animateValue("totalUsers", 0, stats.total || 0, 1000);
+        animateValue("newUsers", 0, stats.newThisWeek || 0, 1200);
+      });
+    </script>
   </body>
 </html>

@@ -5,6 +5,7 @@ const path = require("path");
 const User = require("./models/user");
 const usersRouter = require("./routes/users"); // Import routes once
 const aiRouter = require("./routes/ai");
+const galleryRouter = require("./routes/gallery");
 const {
   requireAuth,
   verifyAdmin,
@@ -22,11 +23,10 @@ app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
 // 3. Connect Routes
-// This connects your Gemini 2.5 logic and User logic
 app.use("/users", usersRouter);
-// Support both legacy /api and current /api/images paths
-app.use("/api", aiRouter);
-app.use("/api/images", aiRouter);
+app.use("/api", usersRouter); // OAuth and user management
+app.use("/api/images", aiRouter); // AI image generation
+app.use("/gallery", galleryRouter); // Gallery management
 
 // MongoDB connection
 const MONGODB_URI =
@@ -150,7 +150,7 @@ app.post("/login", async (req, res) => {
     if (user) {
       res.json({
         message: "Login successful",
-        user: { id: user._id, name: user.name, email: user.email },
+        user: { _id: user._id, name: user.name, email: user.email },
       });
     } else {
       res.status(401).json({ error: "Invalid email or password" });

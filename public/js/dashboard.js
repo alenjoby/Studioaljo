@@ -9,6 +9,13 @@
     return;
   }
 
+  // Update profile picture if available
+  const profileAvatar = document.querySelector(".profile-avatar img");
+  if (profileAvatar && user.profilePicture) {
+    profileAvatar.src = user.profilePicture;
+    profileAvatar.alt = user.name || "User";
+  }
+
   // --- Elements ---
   const fileInput = document.getElementById("file-input");
   const sourcePreview = document.getElementById("input-img");
@@ -574,6 +581,8 @@
         const fd = new FormData();
         fd.append("personImage", personImageFile);
         fd.append("outfitImage", outfitImageFile);
+        fd.append("userId", user._id); // Add user ID for gallery
+        fd.append("saveToGallery", "true"); // Auto-save to gallery
 
         const res = await fetch("/api/images/outfit-tryon", {
           method: "POST",
@@ -664,6 +673,8 @@
       const fd = new FormData();
       fd.append("image", imageFile);
       fd.append("prompt", selectedPrompt);
+      fd.append("userId", user._id); // Add user ID for gallery
+      fd.append("saveToGallery", "true"); // Auto-save to gallery
 
       const res = await fetch("/api/images/edit", { method: "POST", body: fd });
 
@@ -718,15 +729,33 @@
     }
   }
 
-  // --- Back/Logout Handler ---
+  // --- Back Handler (Context-aware: Dashboard or Logout) ---
   if (backBtn) {
     backBtn.addEventListener("click", () => {
-      if (confirm("Are you sure you want to logout?")) {
-        localStorage.removeItem("studioaljo_user");
-        localStorage.removeItem("studioaljo_auth");
-        // Clear auth cookie
-        document.cookie = "studioaljo_auth=; Max-Age=0; Path=/; SameSite=Lax";
-        window.location.href = "/";
+      const galleryView = document.getElementById("gallery-view");
+      const workspaceSection = document.querySelector(".workspace");
+      const ctaSection = document.getElementById("cta-section");
+      const galleryBtn = document.getElementById("gallery-btn");
+      const isInGallery = !galleryView.classList.contains("hidden");
+
+      if (isInGallery) {
+        // In gallery: go back to dashboard
+        galleryView.classList.add("hidden");
+        workspaceSection.classList.remove("hidden");
+        ctaSection.classList.remove("hidden");
+        galleryBtn.classList.remove("rail-btn--active");
+        document
+          .querySelectorAll(".rail-btn")[0]
+          .classList.add("rail-btn--active");
+      } else {
+        // In workspace: logout
+        if (confirm("Are you sure you want to logout?")) {
+          localStorage.removeItem("studioaljo_user");
+          localStorage.removeItem("studioaljo_auth");
+          // Clear auth cookie
+          document.cookie = "studioaljo_auth=; Max-Age=0; Path=/; SameSite=Lax";
+          window.location.href = "/";
+        }
       }
     });
   }
@@ -737,4 +766,274 @@
   setTool(activeTool);
   // Initialize quota display
   updateQuotaDisplay();
+
+  // ============================================
+  // GALLERY FUNCTIONALITY
+  // ============================================
+
+  const galleryBtn = document.getElementById("gallery-btn");
+  const galleryView = document.getElementById("gallery-view");
+  const workspaceSection = document.querySelector(".workspace");
+  const galleryGrid = document.getElementById("gallery-grid");
+  const galleryEmpty = document.getElementById("gallery-empty");
+  const editPromptModal = document.getElementById("edit-prompt-modal");
+  const modalOverlay = document.getElementById("modal-overlay");
+  const modalClose = document.getElementById("modal-close");
+  const modalCancel = document.getElementById("modal-cancel");
+  const modalSave = document.getElementById("modal-save");
+  const editPromptInput = document.getElementById("edit-prompt-input");
+  const ctaSection = document.getElementById("cta-section");
+
+  let currentEditingImageId = null;
+
+  // Toggle between workspace and gallery view
+  if (galleryBtn) {
+    galleryBtn.addEventListener("click", () => {
+      const isGalleryActive = !galleryView.classList.contains("hidden");
+
+      if (isGalleryActive) {
+        // Switch to workspace
+        galleryView.classList.add("hidden");
+        workspaceSection.classList.remove("hidden");
+        ctaSection.classList.remove("hidden");
+        galleryBtn.classList.remove("rail-btn--active");
+        document
+          .querySelectorAll(".rail-btn")[0]
+          .classList.add("rail-btn--active");
+      } else {
+        // Switch to gallery
+        workspaceSection.classList.add("hidden");
+        galleryView.classList.remove("hidden");
+        ctaSection.classList.add("hidden");
+        document
+          .querySelectorAll(".rail-btn")
+          .forEach((btn) => btn.classList.remove("rail-btn--active"));
+        galleryBtn.classList.add("rail-btn--active");
+        loadGallery();
+      }
+    });
+  }
+
+  // Load gallery images from backend
+  async function loadGallery() {
+    if (!user || !user._id) {
+      showError("User not authenticated");
+      return;
+    }
+
+    const loadingDiv = galleryGrid.querySelector(".gallery-loading");
+    if (loadingDiv) loadingDiv.classList.remove("hidden");
+    galleryEmpty.classList.add("hidden");
+
+    try {
+      const response = await fetch(`/gallery?userId=${user._id}`);
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to load gallery");
+      }
+
+      console.log("Gallery data loaded:", data); // Debug log
+
+      // Clear loading state
+      galleryGrid.innerHTML = "";
+
+      if (data.images && data.images.length > 0) {
+        console.log(`Loaded ${data.images.length} images`); // Debug log
+        data.images.forEach((image) => {
+          console.log("Creating gallery item for:", image); // Debug log
+          const galleryItem = createGalleryItem(image);
+          galleryGrid.appendChild(galleryItem);
+        });
+        galleryEmpty.classList.add("hidden");
+      } else {
+        console.log("No images found in gallery"); // Debug log
+        galleryEmpty.classList.remove("hidden");
+      }
+
+      // Initialize Lucide icons
+      if (typeof lucide !== "undefined") {
+        lucide.createIcons();
+      }
+    } catch (error) {
+      console.error("Gallery load error:", error);
+      galleryGrid.innerHTML = `<div class="gallery-loading"><p style="color: red;">Error: ${error.message}</p></div>`;
+    }
+  }
+
+  // Create gallery item HTML element
+  function createGalleryItem(image) {
+    const item = document.createElement("div");
+    item.className = "gallery-item";
+    item.dataset.imageId = image._id;
+
+    const date = new Date(image.createdAt).toLocaleDateString("en-US", {
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+    });
+
+    const toolLabel = image.toolType
+      ? image.toolType.replace("-", " ")
+      : "other";
+
+    item.innerHTML = `
+      <img src="${
+        image.firebaseUrl
+      }" alt="Generated image" class="gallery-item-image" loading="lazy" />
+      <div class="gallery-item-content">
+        <p class="gallery-item-prompt">${
+          image.originalPrompt || "No prompt available"
+        }</p>
+        <div class="gallery-item-meta">
+          <span class="gallery-item-date">${date}</span>
+          <span class="gallery-item-tool">${toolLabel}</span>
+        </div>
+        <div class="gallery-item-actions">
+          <button class="gallery-item-btn gallery-item-btn--edit" data-action="edit">
+            <i data-lucide="edit" style="width: 14px;"></i>
+            Edit
+          </button>
+          <button class="gallery-item-btn gallery-item-btn--delete" data-action="delete">
+            <i data-lucide="trash-2" style="width: 14px;"></i>
+            Delete
+          </button>
+        </div>
+      </div>
+    `;
+
+    // Add event listeners
+    const editBtn = item.querySelector('[data-action="edit"]');
+    const deleteBtn = item.querySelector('[data-action="delete"]');
+
+    editBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openEditModal(image);
+    });
+
+    deleteBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      deleteImage(image._id);
+    });
+
+    // Click image to view full size
+    const img = item.querySelector(".gallery-item-image");
+    img.addEventListener("click", () => {
+      window.open(image.firebaseUrl, "_blank");
+    });
+
+    return item;
+  }
+
+  // Open edit prompt modal
+  function openEditModal(image) {
+    currentEditingImageId = image._id;
+    editPromptInput.value = image.originalPrompt || "";
+    editPromptModal.classList.remove("hidden");
+  }
+
+  // Close modal
+  function closeModal() {
+    editPromptModal.classList.add("hidden");
+    currentEditingImageId = null;
+    editPromptInput.value = "";
+  }
+
+  if (modalClose) modalClose.addEventListener("click", closeModal);
+  if (modalCancel) modalCancel.addEventListener("click", closeModal);
+  if (modalOverlay) modalOverlay.addEventListener("click", closeModal);
+
+  // Save edited prompt
+  if (modalSave) {
+    modalSave.addEventListener("click", async () => {
+      if (!currentEditingImageId) return;
+
+      const newPrompt = editPromptInput.value.trim();
+      if (!newPrompt) {
+        alert("Prompt cannot be empty");
+        return;
+      }
+
+      try {
+        modalSave.disabled = true;
+        modalSave.textContent = "Saving...";
+
+        const response = await fetch(`/gallery/${currentEditingImageId}`, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ originalPrompt: newPrompt }),
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data.error || "Failed to update prompt");
+        }
+
+        // Update UI
+        const item = document.querySelector(
+          `[data-image-id="${currentEditingImageId}"]`
+        );
+        if (item) {
+          const promptEl = item.querySelector(".gallery-item-prompt");
+          if (promptEl) promptEl.textContent = newPrompt;
+        }
+
+        closeModal();
+      } catch (error) {
+        console.error("Update error:", error);
+        alert("Error: " + error.message);
+      } finally {
+        modalSave.disabled = false;
+        modalSave.textContent = "Save Changes";
+      }
+    });
+  }
+
+  // Delete image
+  async function deleteImage(imageId) {
+    if (
+      !confirm(
+        "Are you sure you want to delete this image? This cannot be undone."
+      )
+    ) {
+      return;
+    }
+
+    const item = document.querySelector(`[data-image-id="${imageId}"]`);
+    if (item) {
+      item.style.opacity = "0.5";
+      item.style.pointerEvents = "none";
+    }
+
+    try {
+      const response = await fetch(`/gallery/${imageId}`, {
+        method: "DELETE",
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Failed to delete image");
+      }
+
+      // Remove from UI
+      if (item) {
+        item.remove();
+      }
+
+      // Check if gallery is now empty
+      const remainingItems = galleryGrid.querySelectorAll(".gallery-item");
+      if (remainingItems.length === 0) {
+        galleryEmpty.classList.remove("hidden");
+      }
+    } catch (error) {
+      console.error("Delete error:", error);
+      alert("Error: " + error.message);
+      if (item) {
+        item.style.opacity = "1";
+        item.style.pointerEvents = "auto";
+      }
+    }
+  }
 })();

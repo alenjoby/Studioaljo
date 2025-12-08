@@ -2,6 +2,8 @@ const express = require("express");
 const multer = require("multer");
 // Keeping your existing import method
 const { GoogleGenAI } = require("@google/genai");
+const { uploadImageToFirebase } = require("../utils/firebase");
+const Gallery = require("../models/gallery");
 
 const router = express.Router();
 
@@ -48,6 +50,8 @@ router.post("/edit", upload.single("image"), async (req, res) => {
   try {
     const prompt = req.body.prompt;
     const file = req.file;
+    const userId = req.body.userId; // Optional: for saving to gallery
+    const saveToGallery = req.body.saveToGallery === "true"; // Optional flag
 
     if (!file) return res.status(400).json({ error: "Image file is required" });
     if (!prompt) return res.status(400).json({ error: "Prompt is required" });
@@ -78,9 +82,45 @@ router.post("/edit", upload.single("image"), async (req, res) => {
         .json({ error: "Model returned text instead of an image." });
     }
 
+    const dataUrl = `data:${imgPart.mime};base64,${imgPart.data}`;
+
+    // Optional: Save to Firebase and Gallery if userId and saveToGallery flag provided
+    let galleryImage = null;
+    if (userId && saveToGallery) {
+      try {
+        const imageBuffer = Buffer.from(imgPart.data, "base64");
+        const firebaseUrl = await uploadImageToFirebase(
+          imageBuffer,
+          userId,
+          imgPart.mime
+        );
+
+        galleryImage = new Gallery({
+          userId,
+          firebaseUrl,
+          originalPrompt: prompt,
+          toolType: "ai-styling",
+          metadata: {
+            mimeType: imgPart.mime,
+            fileSize: imageBuffer.length,
+          },
+        });
+
+        await galleryImage.save();
+        console.log("Image saved to gallery:", galleryImage._id);
+      } catch (saveError) {
+        console.error(
+          "Gallery save error:",
+          saveError.error?.message || saveError.message
+        );
+        // Don't fail the request if gallery save fails - just log it
+      }
+    }
+
     res.json({
-      dataUrl: `data:${imgPart.mime};base64,${imgPart.data}`,
+      dataUrl,
       mime: imgPart.mime,
+      galleryId: galleryImage ? galleryImage._id : null,
     });
   } catch (err) {
     console.error("Error in /edit:", err);
@@ -103,6 +143,8 @@ router.post(
       // 1. Validate Inputs
       const personFile = req.files["personImage"]?.[0];
       const outfitFile = req.files["outfitImage"]?.[0];
+      const userId = req.body.userId; // Optional: for saving to gallery
+      const saveToGallery = req.body.saveToGallery === "true";
 
       if (!personFile || !outfitFile) {
         return res.status(400).json({
@@ -177,11 +219,47 @@ router.post(
         });
       }
 
+      const dataUrl = `data:${imgPart.mime};base64,${imgPart.data}`;
+
+      // Optional: Save to Firebase and Gallery
+      let galleryImage = null;
+      if (userId && saveToGallery) {
+        try {
+          const imageBuffer = Buffer.from(imgPart.data, "base64");
+          const firebaseUrl = await uploadImageToFirebase(
+            imageBuffer,
+            userId,
+            imgPart.mime
+          );
+
+          galleryImage = new Gallery({
+            userId,
+            firebaseUrl,
+            originalPrompt: fusionPrompt,
+            toolType: "outfit-tryon",
+            metadata: {
+              mimeType: imgPart.mime,
+              fileSize: imageBuffer.length,
+              aiAnalysis: outfitDescription,
+            },
+          });
+
+          await galleryImage.save();
+          console.log("Outfit try-on saved to gallery:", galleryImage._id);
+        } catch (saveError) {
+          console.error(
+            "Gallery save error:",
+            saveError.error?.message || saveError.message
+          );
+          // Don't fail the request if gallery save fails - just log it
+        }
+      }
       // Return Image AND the AI's analysis (Great for your project presentation)
       res.json({
-        dataUrl: `data:${imgPart.mime};base64,${imgPart.data}`,
+        dataUrl,
         mime: imgPart.mime,
         aiAnalysis: outfitDescription,
+        galleryId: galleryImage ? galleryImage._id : null,
       });
     } catch (err) {
       console.error("Error in /outfit-tryon:", err);

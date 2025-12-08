@@ -7,6 +7,9 @@
     <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico" />
     <link rel="stylesheet" href="/css/global.css" />
     <link rel="stylesheet" href="/landing/style.theme.css?v=2" />
+    <!-- p5.js for Image Reveal Effect -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
   </head>
   <body>
     <!-- Replaced navbar with GSAP nav-pill header -->
@@ -30,62 +33,18 @@
     </header>
 
     <div class="container">
-      <!-- Hero Section -->
-      <section class="hero">
-        <!-- Floating Preview Cards -->
-        <div class="preview-card preview-card-1">
-          <img src="/assets/images/ft3.png" alt="Preview 1" />
-          <div class="name-tag name-tag-remover">
-            <span class="tag-arrow">▸</span>
-            <span>Background Remover</span>
-          </div>
-        </div>
-
-        <div class="preview-card preview-card-2">
-          <img src="/assets/images/ft1.png" alt="Preview 2" />
-          <div class="name-tag name-tag-jessica">
-            <span class="tag-arrow">▸</span>
-            <span>AI Styling</span>
-          </div>
-        </div>
-
-        <div class="preview-card preview-card-3">
-          <img src="/assets/images/ft2.png" alt="Preview 3" />
-          <div class="name-tag name-tag-mario">
-            <span>Room Makeover</span>
-          </div>
-        </div>
-
-        <div class="preview-card preview-card-4">
-          <img src="/assets/images/ft4.png" alt="Preview 4" />
-          <div class="name-tag name-tag-guest">
-            <span>Avatar Creator</span>
-          </div>
-        </div>
-
-        <div class="preview-card preview-card-5">
-          <img src="/assets/images/ft5.png" alt="Preview 5" />
-          <div class="name-tag name-tag-meme">
-            <span class="tag-arrow">▸</span>
-            <span>Meme Maker</span>
-          </div>
-        </div>
-
-        <!-- Hero Content -->
-        <div class="hero-content">
-          <div class="trust-badge">
-            <span class="trust-number">50K+</span> Creators trust Studioaljo
-          </div>
-
-          <h1 class="hero-title">Your Images, Upgraded By AI.</h1>
-
-          <p class="hero-subtitle">
-            StudioAljo is your all-in-one creative studio powered by advanced
-            AI. Transform photos, redesign rooms, create avatars, remove
-            backgrounds, and build visuals with a single click — no editing
-            skills needed.
-          </p>
-        </div>
+      <!-- Hero Section - Video Scrub on Scroll -->
+      <section id="hero-section" class="hero">
+        <video
+          id="hero-video"
+          class="hero-video"
+          muted
+          playsinline
+          preload="metadata"
+        >
+          <source src="/assets/Video/herovideo.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
       </section>
 
       <!-- How It Works Section -->
@@ -220,7 +179,11 @@
       <section class="immersive" id="features">
         <div class="immersive-container">
           <div class="content-col">
-            <div class="content-block" data-index="0" data-color="#0A0A0A">
+            <div
+              class="content-block"
+              data-index="0"
+              data-color="rgba(255, 107, 0, 0.1)"
+            >
               <i class="ph ph-coat-hanger"></i>
               <h2>AI Styling Studio</h2>
               <p>
@@ -229,7 +192,11 @@
                 try-ons.
               </p>
             </div>
-            <div class="content-block" data-index="1" data-color="#14100b">
+            <div
+              class="content-block"
+              data-index="1"
+              data-color="rgba(255, 107, 0, 0.08)"
+            >
               <i class="ph ph-armchair"></i>
               <h2>Room Makeover</h2>
               <p>
@@ -238,7 +205,11 @@
                 reimagining the decor.
               </p>
             </div>
-            <div class="content-block" data-index="2" data-color="#050a14">
+            <div
+              class="content-block"
+              data-index="2"
+              data-color="rgba(255, 107, 0, 0.12)"
+            >
               <i class="ph ph-user-circle"></i>
               <h2>Avatar Creator</h2>
               <p>
@@ -247,7 +218,11 @@
                 platforms.
               </p>
             </div>
-            <div class="content-block" data-index="3" data-color="#1a0f05">
+            <div
+              class="content-block"
+              data-index="3"
+              data-color="rgba(255, 107, 0, 0.06)"
+            >
               <i class="ph ph-smiley-sticker"></i>
               <h2>Viral Meme Maker</h2>
               <p>
@@ -256,7 +231,11 @@
                 engagement.
               </p>
             </div>
-            <div class="content-block" data-index="4" data-color="#000000">
+            <div
+              class="content-block"
+              data-index="4"
+              data-color="rgba(255, 107, 0, 0.1)"
+            >
               <i class="ph ph-eraser"></i>
               <h2>Background Erase</h2>
               <p>
@@ -265,7 +244,7 @@
               </p>
             </div>
           </div>
-          <div class="visual-col">
+          <div class="visual-col" data-shade="medium">
             <div class="visual-stack">
               <img
                 src="/assets/images/ft1.png"
@@ -286,13 +265,13 @@
                 alt="Portrait"
               />
               <img
-                src="/assets/images/ft2.png"
+                src="/assets/images/ft4.png"
                 class="visual-img"
                 style="z-index: 4"
                 alt="Abstract"
               />
               <img
-                src="/assets/images/ft1.png"
+                src="/assets/images/ft5.png"
                 class="visual-img"
                 style="z-index: 5"
                 alt="Object"
@@ -671,83 +650,9 @@
         </div>
       </section>
 
-      <!-- CTA Section -->
+      <!-- CTA Section with Image Reveal Effect -->
       <section class="cta-section">
-        <div class="cta-content">
-          <div class="cta-badge">
-            <span>Join 50,000+ Creators</span>
-          </div>
-
-          <h2 class="cta-title">
-            Ready to Transform<br />
-            Your <span class="cta-highlight">Images?</span>
-          </h2>
-
-          <p class="cta-subtitle">
-            Join thousands of creators using Studioaljo to bring their creative
-            visions to life with the power of AI
-          </p>
-
-          <div class="cta-actions">
-            <a href="/login" class="btn-cta-primary">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path d="M13 2L3 14h8l-1 8 10-12h-8l1-8z" fill="currentColor" />
-              </svg>
-              Start Creating for Free
-            </a>
-            <a href="#features" class="btn-cta-secondary">
-              See How It Works
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M5 12h14M12 5l7 7-7 7"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-            </a>
-          </div>
-
-          <div class="cta-features">
-            <div class="cta-feature">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M20 6L9 17l-5-5"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <span>30 free credits daily</span>
-            </div>
-            <div class="cta-feature">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M20 6L9 17l-5-5"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <span>No credit card required</span>
-            </div>
-            <div class="cta-feature">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none">
-                <path
-                  d="M20 6L9 17l-5-5"
-                  stroke="currentColor"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                />
-              </svg>
-              <span>Cancel anytime</span>
-            </div>
-          </div>
-        </div>
+        <div class="cta-content" id="cta-reveal-container"></div>
       </section>
 
       <!-- Footer -->
@@ -782,6 +687,8 @@
     <!-- Phosphor Icons for immersive section -->
     <script src="https://unpkg.com/@phosphor-icons/web"></script>
     <script type="module" src="/js/landing.js" defer></script>
+    <!-- Image Reveal Effect Script -->
+    <script src="/js/cta-reveal.js"></script>
     <!-- immersive logic merged into /js/landing.js -->
   </body>
 </html>

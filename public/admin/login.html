@@ -7,6 +7,8 @@
     <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico" />
     <link rel="stylesheet" href="/css/global.css" />
     <link rel="stylesheet" href="/css/admin-login.css" />
+    <!-- Google Sign-In -->
+    <script src="https://accounts.google.com/gsi/client" async></script>
     <style>
       @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
 
@@ -37,6 +39,18 @@
         flex-direction: column;
       }
 
+      .video-background {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: -1;
+        transition: transform 0.3s ease-out, filter 0.3s ease-out;
+        transform-origin: center center;
+      }
+
       .navbar {
         display: flex;
         align-items: center;
@@ -45,20 +59,19 @@
         position: sticky;
         top: 20px;
         z-index: 1000;
-        background: rgba(255, 255, 255, 0.7);
+        background: rgba(255, 255, 255, 0.85);
         backdrop-filter: blur(20px);
         -webkit-backdrop-filter: blur(20px);
-        border: 1px solid rgba(255, 107, 0, 0.1);
+        border: 1px solid rgba(255, 255, 255, 0.3);
         border-radius: 24px;
         margin: 20px auto;
         max-width: 1300px;
-        box-shadow: 0 8px 32px rgba(255, 107, 0, 0.08),
-          0 2px 8px rgba(0, 0, 0, 0.04);
+        box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
       }
 
       .back-btn {
         padding: 10px 20px;
-        background: rgba(255, 107, 0, 0.1);
+        background: rgba(255, 255, 255, 0.1);
         color: var(--orange);
         border: 1px solid rgba(255, 107, 0, 0.2);
         border-radius: 12px;
@@ -81,16 +94,20 @@
         align-items: center;
         justify-content: center;
         padding: 40px 20px;
+        position: relative;
+        z-index: 1;
       }
 
       .login-card {
-        background: var(--bg-card);
-        border: 1px solid var(--border);
+        background: rgba(255, 255, 255, 0.197);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        border: 1px solid rgba(255, 255, 255, 0.3);
         border-radius: 24px;
         padding: 48px;
         max-width: 460px;
         width: 100%;
-        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
       }
 
       .logo-container {
@@ -183,6 +200,9 @@
     </style>
   </head>
   <body>
+    <video class="video-background" autoplay muted loop playsinline>
+      <source src="/assets/Video/login-logout.webm" type="video/webm" />
+    </video>
     <nav class="navbar">
       <button class="back-btn" onclick="window.location.href='/'">
         ← Back to Home
@@ -222,11 +242,84 @@
           <button type="submit" class="btn">Login</button>
         </form>
 
+        <div class="divider">
+          <span>OR</span>
+        </div>
+
+        <!-- Google Sign-In Configuration -->
+        <div
+          id="g_id_onload"
+          data-client_id="422319903377-khua7msvq29ed33tb2956mdihm2qo8eb.apps.googleusercontent.com"
+          data-context="signin"
+          data-ux_mode="popup"
+          data-callback="handleGoogleAdminLogin"
+          data-auto_prompt="false"
+        ></div>
+
+        <!-- Google Sign-In Button -->
+        <div
+          class="g_id_signin"
+          data-type="standard"
+          data-shape="rectangular"
+          data-theme="outline"
+          data-text="signin_with"
+          data-size="large"
+          data-width="100%"
+        ></div>
+
         <p id="errorMessage" class="error-message"></p>
       </div>
     </main>
 
     <script src="/js/admin-shortcut.js"></script>
     <script src="/js/admin-login.js"></script>
+    <script>
+      // Interactive video background with mouse movement
+      (function () {
+        const video = document.querySelector(".video-background");
+        if (!video) return;
+
+        let mouseX = 0;
+        let mouseY = 0;
+        let targetPlaybackRate = 1;
+        let currentPlaybackRate = 1;
+
+        // Track mouse movement
+        document.addEventListener("mousemove", (e) => {
+          mouseX = e.clientX / window.innerWidth;
+          mouseY = e.clientY / window.innerHeight;
+
+          const speed = 0.5 + mouseX * 1.5;
+          targetPlaybackRate = speed;
+
+          const moveX = (mouseX - 0.5) * 20;
+          const moveY = (mouseY - 0.5) * 20;
+          video.style.transform = `translate(${moveX}px, ${moveY}px) scale(1.1)`;
+        });
+
+        function updatePlaybackRate() {
+          currentPlaybackRate +=
+            (targetPlaybackRate - currentPlaybackRate) * 0.1;
+          video.playbackRate = currentPlaybackRate;
+          requestAnimationFrame(updatePlaybackRate);
+        }
+
+        updatePlaybackRate();
+
+        document.addEventListener("mousemove", (e) => {
+          const brightness = 0.8 + mouseY * 0.4;
+          const saturation = 0.9 + mouseX * 0.3;
+          video.style.filter = `brightness(${brightness}) saturate(${saturation})`;
+        });
+
+        document.addEventListener("mouseleave", () => {
+          video.pause();
+        });
+
+        document.addEventListener("mouseenter", () => {
+          video.play();
+        });
+      })();
+    </script>
   </body>
 </html>

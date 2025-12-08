@@ -7,8 +7,13 @@
     <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico" />
     <link rel="stylesheet" href="/css/global.css" />
     <link rel="stylesheet" href="/css/auth.css" />
+    <!-- Google Sign-In -->
+    <script src="https://accounts.google.com/gsi/client" async></script>
   </head>
   <body>
+    <video class="video-background" autoplay muted loop playsinline>
+      <source src="/assets/Video/login-logout.webm" type="video/webm" />
+    </video>
     <main>
       <div class="auth-card">
         <div class="logo-container">
@@ -47,6 +52,32 @@
             </div>
             <button type="submit" class="btn">Login</button>
           </form>
+
+          <div class="divider">
+            <span>OR</span>
+          </div>
+
+          <!-- Google Sign-In Configuration -->
+          <div
+            id="g_id_onload"
+            data-client_id="422319903377-khua7msvq29ed33tb2956mdihm2qo8eb.apps.googleusercontent.com"
+            data-context="signin"
+            data-ux_mode="popup"
+            data-callback="handleGoogleLogin"
+            data-auto_prompt="false"
+          ></div>
+
+          <!-- Google Sign-In Button -->
+          <div
+            class="g_id_signin"
+            data-type="standard"
+            data-shape="rectangular"
+            data-theme="outline"
+            data-text="signin_with"
+            data-size="large"
+            data-width="100%"
+          ></div>
+
           <p class="muted">
             Don't have an account? <a href="#" id="switchToSignup">Sign up</a>
           </p>
@@ -98,6 +129,22 @@
             </div>
             <button type="submit" class="btn">Sign Up</button>
           </form>
+
+          <div class="divider">
+            <span>OR</span>
+          </div>
+
+          <!-- Google Sign-Up Button -->
+          <div
+            class="g_id_signin"
+            data-type="standard"
+            data-shape="rectangular"
+            data-theme="outline"
+            data-text="signup_with"
+            data-size="large"
+            data-width="100%"
+          ></div>
+
           <p class="muted">
             Already have an account? <a href="#" id="switchToLogin">Login</a>
           </p>

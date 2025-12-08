@@ -91,6 +91,18 @@
             >
               Outfit Try-On
             </button>
+            <button
+              class="rail-btn"
+              type="button"
+              id="gallery-btn"
+              data-view="gallery"
+            >
+              <i
+                data-lucide="images"
+                style="width: 14px; margin-right: 6px"
+              ></i>
+              My Gallery
+            </button>
           </aside>
 
           <!-- Bottom Panel: Preview Prompt -->
@@ -380,7 +392,36 @@
         </aside>
       </section>
 
-      <div class="cta">
+      <!-- Gallery Section (Hidden by default) -->
+      <section class="gallery-view hidden" id="gallery-view">
+        <div class="gallery-header">
+          <h2 class="gallery-title">
+            <i data-lucide="images" style="width: 24px; margin-right: 10px"></i>
+            My Gallery
+          </h2>
+          <p class="gallery-subtitle">
+            View and manage your AI-generated images
+          </p>
+        </div>
+
+        <div class="gallery-grid" id="gallery-grid">
+          <!-- Gallery items will be dynamically inserted here -->
+          <div class="gallery-loading">
+            <i data-lucide="loader" class="loading-spinner"></i>
+            <p>Loading your gallery...</p>
+          </div>
+        </div>
+
+        <div class="gallery-empty hidden" id="gallery-empty">
+          <i
+            data-lucide="image-off"
+            style="width: 48px; height: 48px; opacity: 0.3"
+          ></i>
+          <p>No images yet. Start creating!</p>
+        </div>
+      </section>
+
+      <div class="cta" id="cta-section">
         <div class="btn-container" id="btn-container">
           <div class="progress-fill" id="progress-bar"></div>
           <div class="btn-text-wrapper">
@@ -394,6 +435,34 @@
         <div class="error-message" id="error-box"></div>
       </div>
     </main>
+
+    <!-- Edit Prompt Modal -->
+    <div class="modal hidden" id="edit-prompt-modal">
+      <div class="modal-overlay" id="modal-overlay"></div>
+      <div class="modal-content">
+        <div class="modal-header">
+          <h3>Edit Prompt</h3>
+          <button class="modal-close" id="modal-close">
+            <i data-lucide="x"></i>
+          </button>
+        </div>
+        <div class="modal-body">
+          <label for="edit-prompt-input" class="modal-label"
+            >Image Prompt</label
+          >
+          <textarea
+            id="edit-prompt-input"
+            class="modal-textarea"
+            rows="6"
+            placeholder="Enter your updated prompt..."
+          ></textarea>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-outline" id="modal-cancel">Cancel</button>
+          <button class="btn btn-primary" id="modal-save">Save Changes</button>
+        </div>
+      </div>
+    </div>
 
     <script src="/js/dashboard.js" defer></script>
   </body>

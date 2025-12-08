@@ -1,21 +1,37 @@
 /* Login/Signup Page Specific Styles */
 
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -1;
+  transition: transform 0.3s ease-out, filter 0.3s ease-out;
+  transform-origin: center center;
+}
+
 main {
   flex: 1;
   display: flex;
   align-items: center;
   justify-content: center;
   padding: 40px 20px;
+  position: relative;
+  z-index: 1;
 }
 
 .auth-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.24);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
   border-radius: 24px;
   padding: 48px;
   max-width: 480px;
   width: 100%;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
 }
 
 .logo-container {
@@ -35,26 +51,6 @@ main {
   background: rgba(26, 26, 26, 0.04);
   padding: 4px;
   border-radius: 12px;
-}
-
-.auth-tab {
-  flex: 1;
-  padding: 10px 20px;
-  border: none;
-  background: transparent;
-  color: var(--text-secondary);
-  font-weight: 600;
-  font-size: 15px;
-  border-radius: 8px;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  font-family: inherit;
-}
-
-.auth-tab.active {
-  background: #ffffff;
-  color: var(--text);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .subtitle {
@@ -81,4 +77,204 @@ main {
 
 h2 {
   color: #ff8933;
+}
+
+/* Form Transition Animations */
+#loginFormContainer,
+#signupFormContainer {
+  transition: all 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  transform-origin: center;
+}
+
+#loginFormContainer.hidden,
+#signupFormContainer.hidden {
+  opacity: 0;
+  transform: scale(0.8) rotateY(90deg);
+  pointer-events: none;
+  position: absolute;
+  width: calc(100% - 96px);
+}
+
+#loginFormContainer:not(.hidden),
+#signupFormContainer:not(.hidden) {
+  opacity: 1;
+  transform: scale(1) rotateY(0deg);
+  animation: slideInBounce 0.6s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+}
+
+@keyframes slideInBounce {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotateY(-90deg);
+  }
+  60% {
+    transform: scale(1.05) rotateY(5deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotateY(0deg);
+  }
+}
+
+/* Card shake animation on tab switch */
+.auth-card.switching {
+  animation: cardShake 0.5s ease-in-out;
+}
+
+@keyframes cardShake {
+  0%,
+  100% {
+    transform: translateX(0) scale(1);
+  }
+  25% {
+    transform: translateX(-10px) scale(0.98);
+  }
+  75% {
+    transform: translateX(10px) scale(0.98);
+  }
+}
+
+/* Tab transition with glow effect */
+.auth-tab {
+  flex: 1;
+  padding: 10px 20px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  font-weight: 600;
+  font-size: 15px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  font-family: inherit;
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-tab::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 107, 0, 0.3),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.auth-tab:hover::before {
+  left: 100%;
+}
+
+.auth-tab.active {
+  background: #ffffff;
+  color: var(--text);
+  box-shadow: 0 4px 20px rgba(255, 107, 0, 0.3);
+  transform: scale(1.05);
+}
+
+/* Stagger animation for form fields */
+.form-group {
+  animation: fadeInUp 0.5s ease-out backwards;
+}
+
+#loginFormContainer:not(.hidden) .form-group:nth-child(1) {
+  animation-delay: 0.1s;
+}
+#loginFormContainer:not(.hidden) .form-group:nth-child(2) {
+  animation-delay: 0.2s;
+}
+#loginFormContainer:not(.hidden) .form-group:nth-child(3) {
+  animation-delay: 0.3s;
+}
+#loginFormContainer:not(.hidden) .btn {
+  animation: fadeInUp 0.5s ease-out 0.4s backwards;
+}
+
+#signupFormContainer:not(.hidden) .form-group:nth-child(1) {
+  animation-delay: 0.1s;
+}
+#signupFormContainer:not(.hidden) .form-group:nth-child(2) {
+  animation-delay: 0.2s;
+}
+#signupFormContainer:not(.hidden) .form-group:nth-child(3) {
+  animation-delay: 0.3s;
+}
+#signupFormContainer:not(.hidden) .form-group:nth-child(4) {
+  animation-delay: 0.4s;
+}
+#signupFormContainer:not(.hidden) .btn {
+  animation: fadeInUp 0.5s ease-out 0.5s backwards;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Divider for "OR" between forms and Google Sign-In */
+.divider {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  margin: 24px 0;
+  position: relative;
+}
+
+.divider::before,
+.divider::after {
+  content: "";
+  flex: 1;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.divider span {
+  padding: 0 16px;
+  color: rgba(255, 255, 255, 0.7);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.5px;
+}
+
+/* Google Sign-In button container styling */
+.g_id_signin {
+  margin-bottom: 20px;
+  display: flex;
+  justify-content: center;
+}
+
+/* Style the Google button iframe container */
+.g_id_signin > div {
+  width: 100% !important;
+  border-radius: 12px !important;
+  overflow: hidden !important;
+}
+
+/* Enhanced Google Sign-In button wrapper */
+.g_id_signin iframe {
+  border-radius: 12px !important;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+  transition: all 0.3s ease !important;
+}
+
+.g_id_signin:hover iframe {
+  box-shadow: 0 4px 12px rgba(255, 137, 51, 0.2) !important;
+  transform: translateY(-1px);
+}
+
+/* Custom Google button styling */
+.g_id_signin [role="button"] {
+  border-radius: 12px !important;
+  font-family: inherit !important;
 }
