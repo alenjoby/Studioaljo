@@ -10,11 +10,28 @@ function initHeroVideoScrub() {
     return;
   }
 
+  // Detect mobile device
+  const isMobile = window.innerWidth < 768;
+
   // Wait for video metadata to load to get accurate duration
   video.addEventListener("loadedmetadata", () => {
     console.log(`Video loaded: duration = ${video.duration}s`);
 
-    // Register ScrollTrigger plugin
+    if (isMobile) {
+      // Mobile: Auto-play video instead of scroll scrub
+      console.log("Mobile detected: Using auto-play for hero video");
+      video.autoplay = true;
+      video.muted = true;
+      video.loop = false;
+      video.play().catch(() => {
+        console.warn(
+          "Autoplay prevented by browser - user interaction may be required"
+        );
+      });
+      return;
+    }
+
+    // Desktop: Register ScrollTrigger plugin for scroll scrub
     gsap.registerPlugin(ScrollTrigger);
 
     // Create ScrollTrigger without animation - we'll control video directly
@@ -360,8 +377,11 @@ function initImmersiveSection() {
 
   gsap.registerPlugin(ScrollTrigger);
 
-  // Lenis (optional smooth scroll)
-  if (typeof Lenis !== "undefined") {
+  // Detect mobile device
+  const isMobile = window.innerWidth < 768;
+
+  // Lenis (optional smooth scroll) - disable on mobile for better performance
+  if (typeof Lenis !== "undefined" && !isMobile) {
     const lenis = new Lenis({
       duration: 1.2,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -384,12 +404,102 @@ function initImmersiveSection() {
     return;
   }
 
-  // Initial clip setup
-  images.forEach((img, i) => {
-    gsap.set(img, {
-      clipPath: i === 0 ? "inset(0% 0 0 0)" : "inset(100% 0 0 0)",
+  if (isMobile) {
+    // Mobile: Fade-in animations instead of clip-path
+    console.log("Mobile detected: Using fade animations for immersive section");
+
+    // Show all images at once on mobile
+    images.forEach((img) => {
+      gsap.set(img, { opacity: 0, y: 20 });
     });
-  });
+
+    blocks.forEach((block, i) => {
+      // Active block indicator
+      ScrollTrigger.create({
+        trigger: block,
+        start: "top center",
+        end: "bottom center",
+        onToggle: (self) => {
+          if (self.isActive) {
+            block.classList.add("active");
+            if (visualCol) {
+              gsap.to(visualCol, {
+                backgroundColor: block.dataset.color,
+                duration: 0.5,
+              });
+            }
+          } else {
+            block.classList.remove("active");
+          }
+        },
+      });
+
+      // Fade in corresponding image on scroll
+      if (images[i]) {
+        gsap.to(images[i], {
+          opacity: 1,
+          y: 0,
+          duration: 0.6,
+          ease: "power2.out",
+          scrollTrigger: {
+            trigger: block,
+            start: "top 80%",
+            end: "top 20%",
+            markers: false,
+          },
+        });
+      }
+    });
+  } else {
+    // Desktop: Original clip-path animations
+    console.log(
+      "Desktop detected: Using clip-path animations for immersive section"
+    );
+
+    // Initial clip setup
+    images.forEach((img, i) => {
+      gsap.set(img, {
+        clipPath: i === 0 ? "inset(0% 0 0 0)" : "inset(100% 0 0 0)",
+      });
+    });
+
+    blocks.forEach((block, i) => {
+      // Active block indicator + background color tween
+      ScrollTrigger.create({
+        trigger: block,
+        start: "top center",
+        end: "bottom center",
+        onToggle: (self) => {
+          if (self.isActive) {
+            block.classList.add("active");
+            if (visualCol) {
+              gsap.to(visualCol, {
+                backgroundColor: block.dataset.color,
+                duration: 0.5,
+              });
+            }
+          } else {
+            block.classList.remove("active");
+          }
+        },
+      });
+
+      // Reveal subsequent images via scroll scrub
+      if (i > 0 && images[i]) {
+        const target = images[i];
+        gsap.to(target, {
+          clipPath: "inset(0% 0 0 0)",
+          ease: "none",
+          scrollTrigger: {
+            trigger: block,
+            start: "top bottom",
+            end: "top top",
+            scrub: true,
+          },
+        });
+      }
+    });
+  }
 
   // Refresh after load for layout correctness
   window.addEventListener(
@@ -399,43 +509,6 @@ function initImmersiveSection() {
     },
     { once: true }
   );
-
-  blocks.forEach((block, i) => {
-    // Active block indicator + background color tween
-    ScrollTrigger.create({
-      trigger: block,
-      start: "top center",
-      end: "bottom center",
-      onToggle: (self) => {
-        if (self.isActive) {
-          block.classList.add("active");
-          if (visualCol) {
-            gsap.to(visualCol, {
-              backgroundColor: block.dataset.color,
-              duration: 0.5,
-            });
-          }
-        } else {
-          block.classList.remove("active");
-        }
-      },
-    });
-
-    // Reveal subsequent images via scroll scrub
-    if (i > 0 && images[i]) {
-      const target = images[i];
-      gsap.to(target, {
-        clipPath: "inset(0% 0 0 0)",
-        ease: "none",
-        scrollTrigger: {
-          trigger: block,
-          start: "top bottom",
-          end: "top top",
-          scrub: true,
-        },
-      });
-    }
-  });
 
   console.log("Immersive section initialized successfully");
 }

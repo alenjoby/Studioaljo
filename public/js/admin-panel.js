@@ -26,10 +26,17 @@ function logout() {
       "Content-Type": "application/json",
     },
     body: JSON.stringify({ token }),
-  }).then(() => {
-    localStorage.removeItem("adminToken");
-    window.location.href = "/admin/login";
-  });
+  })
+    .then(() => {
+      localStorage.removeItem("adminToken");
+      window.location.href = "/admin/login";
+    })
+    .catch((err) => {
+      console.error("Logout error:", err);
+      // Still logout on client side even if server request fails
+      localStorage.removeItem("adminToken");
+      window.location.href = "/admin/login";
+    });
 }
 
 document.addEventListener("DOMContentLoaded", async () => {

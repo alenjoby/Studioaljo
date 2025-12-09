@@ -1,0 +1,93 @@
+/* Animation Keyframes for Landing Page */
+
+@keyframes orbitA {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  25% {
+    transform: translate(26px, -18px) rotate(0.6deg);
+  }
+  50% {
+    transform: translate(0, -36px) rotate(-0.6deg);
+  }
+  75% {
+    transform: translate(-22px, -18px) rotate(0.4deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+@keyframes orbitB {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  20% {
+    transform: translate(18px, 14px) rotate(-0.4deg);
+  }
+  50% {
+    transform: translate(0, 28px) rotate(0.5deg);
+  }
+  80% {
+    transform: translate(-18px, 12px) rotate(-0.3deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+@keyframes orbitC {
+  0% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+  30% {
+    transform: translate(-22px, -10px) rotate(0.5deg);
+  }
+  60% {
+    transform: translate(0, 22px) rotate(-0.5deg);
+  }
+  90% {
+    transform: translate(20px, -8px) rotate(0.3deg);
+  }
+  100% {
+    transform: translate(0, 0) rotate(0deg);
+  }
+}
+
+@keyframes floatTag {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes floatTagCenter {
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(-6px);
+  }
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}

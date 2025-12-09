@@ -278,3 +278,151 @@ h2 {
   border-radius: 12px !important;
   font-family: inherit !important;
 }
+
+/* ============================
+   RESPONSIVE MEDIA QUERIES
+   ============================ */
+
+/* Tablet (768px - 1024px) */
+@media (max-width: 1024px) {
+  main {
+    padding: 32px 16px;
+  }
+
+  .auth-card {
+    padding: 40px 32px;
+    max-width: 420px;
+  }
+
+  .logo-container img {
+    width: 80px;
+  }
+
+  h2 {
+    font-size: 24px;
+  }
+}
+
+/* Mobile (320px - 767px) */
+@media (max-width: 767px) {
+  main {
+    padding: 20px 16px;
+    align-items: flex-start;
+    justify-content: flex-start;
+    padding-top: 80px;
+  }
+
+  .auth-card {
+    padding: 32px 20px;
+    max-width: 100%;
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+
+  .logo-container {
+    margin-bottom: 24px;
+  }
+
+  .logo-container img {
+    width: 70px;
+  }
+
+  .auth-tabs {
+    margin-bottom: 24px;
+    gap: 4px;
+  }
+
+  .auth-tab {
+    font-size: 13px;
+    padding: 8px 12px;
+  }
+
+  h2 {
+    font-size: 20px;
+    margin-bottom: 8px;
+  }
+
+  .subtitle {
+    font-size: 14px;
+    margin-bottom: 16px;
+  }
+
+  .form-group {
+    gap: 6px;
+  }
+
+  .form-group label {
+    font-size: 14px;
+  }
+
+  .form-group input {
+    font-size: 16px;
+    padding: 12px 14px;
+  }
+
+  .divider {
+    margin: 18px 0;
+  }
+
+  .divider span {
+    padding: 0 8px;
+    font-size: 12px;
+  }
+
+  .g_id_signin {
+    margin-bottom: 16px;
+  }
+
+  .form-footer {
+    margin-top: 16px;
+    font-size: 12px;
+  }
+
+  .submit-btn {
+    margin-top: 4px;
+    font-size: 15px;
+    padding: 12px 16px;
+  }
+
+  #loginFormContainer.hidden,
+  #signupFormContainer.hidden {
+    width: calc(100% - 40px);
+  }
+}
+
+/* Extra Small (320px - 480px) */
+@media (max-width: 480px) {
+  .auth-card {
+    padding: 24px 16px;
+  }
+
+  .logo-container {
+    margin-bottom: 20px;
+  }
+
+  .logo-container img {
+    width: 60px;
+  }
+
+  h2 {
+    font-size: 18px;
+  }
+
+  .subtitle {
+    font-size: 13px;
+  }
+
+  .auth-tab {
+    font-size: 12px;
+    padding: 6px 10px;
+  }
+
+  .form-group input {
+    font-size: 16px;
+  }
+
+  .submit-btn {
+    padding: 11px 12px;
+    font-size: 14px;
+  }
+}

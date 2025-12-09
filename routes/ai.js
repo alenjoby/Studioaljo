@@ -173,9 +173,22 @@ router.post(
       });
 
       // Robust fallback if the description fails
-      const outfitDescription = descriptionResponse.response.text()
-        ? descriptionResponse.response.text()
-        : "The clothing item shown in the second image";
+      let outfitDescription = "The clothing item shown in the second image";
+      try {
+        if (descriptionResponse?.response?.text) {
+          outfitDescription = descriptionResponse.response.text();
+        } else if (
+          descriptionResponse?.candidates?.[0]?.content?.parts?.[0]?.text
+        ) {
+          outfitDescription =
+            descriptionResponse.candidates[0].content.parts[0].text;
+        }
+      } catch (textError) {
+        console.warn(
+          "Could not extract outfit description, using fallback:",
+          textError.message
+        );
+      }
 
       console.log(
         "Outfit Grounding Complete:",

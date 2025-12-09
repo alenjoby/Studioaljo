@@ -10,10 +10,44 @@
   }
 
   // Update profile picture if available
-  const profileAvatar = document.querySelector(".profile-avatar img");
-  if (profileAvatar && user.profilePicture) {
-    profileAvatar.src = user.profilePicture;
-    profileAvatar.alt = user.name || "User";
+  const profileImg = document.getElementById("user-profile-img");
+  const avatarFallback = document.getElementById("avatar-fallback");
+
+  console.log("User object from localStorage:", user);
+  console.log("Profile picture URL:", user.profilePicture);
+  console.log("Profile img element:", profileImg);
+  console.log("Avatar fallback element:", avatarFallback);
+
+  if (user.profilePicture && user.profilePicture.trim()) {
+    console.log("Setting profile picture to:", user.profilePicture);
+    if (profileImg) {
+      profileImg.src = user.profilePicture;
+      profileImg.alt = user.name || "User";
+      profileImg.style.display = "block";
+
+      profileImg.onload = function () {
+        console.log("✓ Profile image loaded successfully");
+        if (avatarFallback) avatarFallback.classList.add("hidden");
+      };
+
+      profileImg.onerror = function (e) {
+        console.error("✗ Failed to load profile image:", user.profilePicture);
+        console.error("Error details:", e);
+        this.style.display = "none";
+        if (avatarFallback) avatarFallback.classList.remove("hidden");
+      };
+    }
+  } else {
+    console.log("No profile picture available, showing fallback icon");
+    // Show fallback icon if no profile picture
+    if (profileImg) profileImg.style.display = "none";
+    if (avatarFallback) avatarFallback.classList.remove("hidden");
+  }
+
+  // Initialize Lucide icons for the avatar
+  if (typeof lucide !== "undefined") {
+    lucide.createIcons();
+    console.log("Lucide icons initialized");
   }
 
   // --- Elements ---

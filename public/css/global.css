@@ -1,5 +1,6 @@
 /* Global Styles for Studioaljo */
 @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@300;400;500;600;700&display=swap");
 
 /* CSS Variables */
 :root {
@@ -8,9 +9,13 @@
   --text: #1a1a1a;
   --text-secondary: rgba(26, 26, 26, 0.7);
   --orange: #ff6b00;
+  --accent: var(--orange);
   --border: rgba(26, 26, 26, 0.12);
   --danger: #dc3545;
   --success: #28a745;
+  /* Typography */
+  --font-heading: "Josefin Sans", system-ui, sans-serif;
+  --font-body: "Inter", system-ui, sans-serif;
 }
 
 /* Reset */
@@ -198,6 +203,17 @@ select:disabled {
 }
 
 .btn-secondary:hover {
+  border-color: var(--orange);
+  color: var(--orange);
+}
+
+.btn-outline {
+  background: transparent;
+  color: var(--text);
+  border: 2px solid var(--border);
+}
+
+.btn-outline:hover {
   border-color: var(--orange);
   color: var(--orange);
 }

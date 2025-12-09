@@ -25,9 +25,18 @@
         </button>
         <div class="profile-avatar">
           <img
-            src="https://api.dicebear.com/7.x/avataaars/svg?seed=Felix"
-            alt="User"
+            id="user-profile-img"
+            src=""
+            alt="User Profile"
+            style="display: none"
+            referrerpolicy="no-referrer"
+            onerror="this.style.display='none'; document.getElementById('avatar-fallback').classList.remove('hidden')"
           />
+          <i
+            data-lucide="user"
+            class="avatar-icon hidden"
+            id="avatar-fallback"
+          ></i>
         </div>
       </div>
 
@@ -97,10 +106,7 @@
               id="gallery-btn"
               data-view="gallery"
             >
-              <i
-                data-lucide="images"
-                style="width: 14px; margin-right: 6px"
-              ></i>
+              <i data-lucide="images" class="icon-sm"></i>
               My Gallery
             </button>
           </aside>
@@ -138,33 +144,14 @@
 
                 <div class="upload-content" id="upload-ui">
                   <i data-lucide="upload-cloud" class="upload-icon"></i>
-                  <h4 style="font-size: 14px; margin-bottom: 5px">
-                    Upload Source
-                  </h4>
-                  <p style="font-size: 10px; color: #555">
-                    Drag & drop or click to browse
-                  </p>
+                  <h4 class="upload-title">Upload Source</h4>
+                  <p class="upload-subtitle">Drag & drop or click to browse</p>
                 </div>
 
                 <img id="input-img" class="display-img hidden" alt="" />
 
-                <button
-                  id="clear-btn"
-                  class="hidden"
-                  style="
-                    position: absolute;
-                    top: 10px;
-                    right: 10px;
-                    background: rgba(0, 0, 0, 0.6);
-                    color: white;
-                    border: none;
-                    padding: 5px;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    z-index: 50;
-                  "
-                >
-                  <i data-lucide="x" style="width: 14px"></i>
+                <button id="clear-btn" class="hidden clear-btn">
+                  <i data-lucide="x" class="icon-sm"></i>
                 </button>
               </div>
             </div>
@@ -190,33 +177,14 @@
 
                 <div class="upload-content" id="person-upload-ui">
                   <i data-lucide="user" class="upload-icon"></i>
-                  <h4 style="font-size: 14px; margin-bottom: 5px">
-                    Upload Your Photo
-                  </h4>
-                  <p style="font-size: 10px; color: #555">
-                    Full body recommended
-                  </p>
+                  <h4 class="upload-title">Upload Your Photo</h4>
+                  <p class="upload-subtitle">Full body recommended</p>
                 </div>
 
                 <img id="person-img" class="display-img hidden" alt="" />
 
-                <button
-                  id="person-clear-btn"
-                  class="hidden"
-                  style="
-                    position: absolute;
-                    top: 10px;
-                    right: 10px;
-                    background: rgba(0, 0, 0, 0.6);
-                    color: white;
-                    border: none;
-                    padding: 5px;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    z-index: 50;
-                  "
-                >
-                  <i data-lucide="x" style="width: 14px"></i>
+                <button id="person-clear-btn" class="hidden clear-btn">
+                  <i data-lucide="x" class="icon-sm"></i>
                 </button>
               </div>
             </div>
@@ -242,33 +210,14 @@
 
                 <div class="upload-content" id="outfit-upload-ui">
                   <i data-lucide="shirt" class="upload-icon"></i>
-                  <h4 style="font-size: 14px; margin-bottom: 5px">
-                    Upload Outfit
-                  </h4>
-                  <p style="font-size: 10px; color: #555">
-                    Clothing item or full outfit
-                  </p>
+                  <h4 class="upload-title">Upload Outfit</h4>
+                  <p class="upload-subtitle">Clothing item or full outfit</p>
                 </div>
 
                 <img id="outfit-img" class="display-img hidden" alt="" />
 
-                <button
-                  id="outfit-clear-btn"
-                  class="hidden"
-                  style="
-                    position: absolute;
-                    top: 10px;
-                    right: 10px;
-                    background: rgba(0, 0, 0, 0.6);
-                    color: white;
-                    border: none;
-                    padding: 5px;
-                    border-radius: 4px;
-                    cursor: pointer;
-                    z-index: 50;
-                  "
-                >
-                  <i data-lucide="x" style="width: 14px"></i>
+                <button id="outfit-clear-btn" class="hidden clear-btn">
+                  <i data-lucide="x" class="icon-sm"></i>
                 </button>
               </div>
             </div>
@@ -288,35 +237,17 @@
                 <!-- Scanning Laser Line -->
                 <div class="scan-line"></div>
 
-                <div
-                  id="output-placeholder"
-                  style="text-align: center; opacity: 0.3"
-                >
-                  <i
-                    data-lucide="image"
-                    style="width: 40px; height: 40px; margin-bottom: 10px"
-                  ></i>
-                  <p style="font-size: 10px">AWAITING INPUT</p>
+                <div id="output-placeholder" class="output-placeholder">
+                  <i data-lucide="image" class="icon-lg"></i>
+                  <p>AWAITING INPUT</p>
                 </div>
 
                 <img id="output-img" class="display-img hidden" alt="" />
                 <a
                   id="download-btn"
-                  class="hidden"
+                  class="hidden download-btn-positioned"
                   href="#"
                   download
-                  style="
-                    position: absolute;
-                    bottom: 15px;
-                    background: black;
-                    color: white;
-                    padding: 5px 15px;
-                    border-radius: 20px;
-                    text-decoration: none;
-                    font-size: 10px;
-                    border: 1px solid #333;
-                    z-index: 30;
-                  "
                   >Save Asset</a
                 >
               </div>
@@ -396,7 +327,7 @@
       <section class="gallery-view hidden" id="gallery-view">
         <div class="gallery-header">
           <h2 class="gallery-title">
-            <i data-lucide="images" style="width: 24px; margin-right: 10px"></i>
+            <i data-lucide="images" class="icon-md"></i>
             My Gallery
           </h2>
           <p class="gallery-subtitle">
@@ -413,10 +344,7 @@
         </div>
 
         <div class="gallery-empty hidden" id="gallery-empty">
-          <i
-            data-lucide="image-off"
-            style="width: 48px; height: 48px; opacity: 0.3"
-          ></i>
+          <i data-lucide="image-off" class="icon-xl"></i>
           <p>No images yet. Start creating!</p>
         </div>
       </section>

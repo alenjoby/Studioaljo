@@ -287,7 +287,7 @@ function handleGoogleLogin(response) {
           60 * 60 * 24 * 7 +
           "; Path=/; SameSite=Lax";
         // Redirect to dashboard
-        window.location.href = "/dashboard/";
+        window.location.href = "/dashboard";
       } else {
         document.getElementById("loginErrorMessage").textContent =
           data.message || "Google authentication failed";

@@ -6,7 +6,8 @@
     <title>Studioaljo - AI Image Studio</title>
     <link rel="icon" type="image/x-icon" href="/assets/images/favicon.ico" />
     <link rel="stylesheet" href="/css/global.css" />
-    <link rel="stylesheet" href="/landing/style.theme.css?v=2" />
+    <link rel="stylesheet" href="/landing/style.theme.css?v=3" />
+    <link rel="stylesheet" href="/landing/animations.css" />
     <!-- p5.js for Image Reveal Effect -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
@@ -18,16 +19,20 @@
         <div class="logo">
           <img src="/assets/images/logo white.png" alt="Studioaljo" />
         </div>
-        <nav class="nav-links">
+        <button
+          class="hamburger-menu"
+          id="hamburgerMenu"
+          aria-label="Toggle menu"
+        >
+          <span></span>
+          <span></span>
+          <span></span>
+        </button>
+        <nav class="nav-links" id="navLinks">
           <a href="#features">Features</a>
           <a href="#how-it-works">Tools</a>
           <a href="#testimonials">Testimonials</a>
-          <a
-            href="/login"
-            class="btn btn-primary"
-            style="padding: 10px 24px; font-size: 0.9rem"
-            >Get Started</a
-          >
+          <a href="/login" class="btn btn-primary nav-cta">Get Started</a>
         </nav>
       </div>
     </header>
@@ -249,31 +254,26 @@
               <img
                 src="/assets/images/ft1.png"
                 class="visual-img"
-                style="z-index: 1"
                 alt="Fashion"
               />
               <img
                 src="/assets/images/ft2.png"
                 class="visual-img"
-                style="z-index: 2"
                 alt="Interior"
               />
               <img
                 src="/assets/images/ft3.png"
                 class="visual-img"
-                style="z-index: 3"
                 alt="Portrait"
               />
               <img
                 src="/assets/images/ft4.png"
                 class="visual-img"
-                style="z-index: 4"
                 alt="Abstract"
               />
               <img
                 src="/assets/images/ft5.png"
                 class="visual-img"
-                style="z-index: 5"
                 alt="Object"
               />
             </div>
@@ -689,6 +689,33 @@
     <script type="module" src="/js/landing.js" defer></script>
     <!-- Image Reveal Effect Script -->
     <script src="/js/cta-reveal.js"></script>
+    <!-- Mobile Navigation Toggle -->
+    <script>
+      const hamburgerMenu = document.getElementById("hamburgerMenu");
+      const navLinks = document.getElementById("navLinks");
+      const navAnchors = navLinks.querySelectorAll("a");
+
+      hamburgerMenu?.addEventListener("click", () => {
+        hamburgerMenu.classList.toggle("active");
+        navLinks.classList.toggle("active");
+      });
+
+      // Close menu when clicking on a link
+      navAnchors.forEach((link) => {
+        link.addEventListener("click", () => {
+          hamburgerMenu.classList.remove("active");
+          navLinks.classList.remove("active");
+        });
+      });
+
+      // Close menu when clicking outside
+      document.addEventListener("click", (e) => {
+        if (!e.target.closest("header")) {
+          hamburgerMenu.classList.remove("active");
+          navLinks.classList.remove("active");
+        }
+      });
+    </script>
     <!-- immersive logic merged into /js/landing.js -->
   </body>
 </html>
