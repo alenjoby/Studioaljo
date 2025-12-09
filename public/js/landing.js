@@ -13,9 +13,16 @@ function initHeroVideoScrub() {
   // Detect mobile device
   const isMobile = window.innerWidth < 768;
 
-  // Wait for video metadata to load to get accurate duration
+  // Wait for enough video data to be loaded
+  let isVideoReady = false;
+
+  video.addEventListener("canplaythrough", () => {
+    isVideoReady = true;
+    console.log(`Video buffered and ready: duration = ${video.duration}s`);
+  });
+
   video.addEventListener("loadedmetadata", () => {
-    console.log(`Video loaded: duration = ${video.duration}s`);
+    console.log(`Video metadata loaded: duration = ${video.duration}s`);
 
     if (isMobile) {
       // Mobile: Auto-play video instead of scroll scrub
@@ -34,22 +41,33 @@ function initHeroVideoScrub() {
     // Desktop: Register ScrollTrigger plugin for scroll scrub
     gsap.registerPlugin(ScrollTrigger);
 
-    // Create ScrollTrigger without animation - we'll control video directly
+    let requestId = null;
+
+    // Create ScrollTrigger with optimized scrubbing
     ScrollTrigger.create({
       trigger: heroSection,
       start: "top top",
       end: "+=400%", // Pin for 400vh of scrolling
       pin: true,
-      markers: false, // Set to true for debugging
+      markers: false,
+      scrub: 0.5, // Smooth scrubbing with 0.5s delay
       onUpdate: (self) => {
-        // Directly update video currentTime based on scroll progress
-        if (video && video.duration) {
-          video.currentTime = video.duration * self.progress;
-          // Prevent video from playing on its own
-          if (!video.paused) {
-            video.pause();
+        // Use requestAnimationFrame for smoother updates
+        if (requestId) cancelAnimationFrame(requestId);
+
+        requestId = requestAnimationFrame(() => {
+          if (video && video.duration && isVideoReady) {
+            const targetTime = video.duration * self.progress;
+            // Only update if difference is significant to reduce jank
+            if (Math.abs(video.currentTime - targetTime) > 0.01) {
+              video.currentTime = targetTime;
+            }
+            // Prevent video from playing on its own
+            if (!video.paused) {
+              video.pause();
+            }
           }
-        }
+        });
       },
     });
 
