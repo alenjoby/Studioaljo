@@ -414,6 +414,9 @@ body.connector-enhanced .card-border-svg {
   box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
   position: relative;
   transition: all 0.3s;
+  min-height: 500px;
+  display: flex;
+  flex-direction: column;
 }
 
 .tool-card:hover {
@@ -469,14 +472,18 @@ body.connector-enhanced .card-border-svg {
   border-radius: 12px;
   overflow: hidden;
   min-height: 280px;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
-/* .tool-preview img {
-  width: 350px;
-  height: auto;
-  object-fit: cover;
+.tool-preview img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   display: block;
-} */
+}
 
 .powered-by-section {
   text-align: center;
@@ -1615,6 +1622,23 @@ body.connector-enhanced .card-border-svg {
     gap: 16px;
   }
 
+  .tool-card {
+    padding: 24px;
+    min-height: 450px;
+  }
+
+  .tool-title {
+    font-size: 24px;
+  }
+
+  .tool-description {
+    font-size: 14px;
+  }
+
+  .tool-preview {
+    min-height: 200px;
+  }
+
   .immersive-container {
     flex-direction: column;
   }
@@ -1713,6 +1737,19 @@ body.connector-enhanced .card-border-svg {
   .tools-grid {
     grid-template-columns: repeat(2, 1fr);
     gap: 20px;
+  }
+
+  .tool-card {
+    padding: 28px;
+    min-height: 480px;
+  }
+
+  .tool-title {
+    font-size: 28px;
+  }
+
+  .tool-preview {
+    min-height: 240px;
   }
 
   .content-block {
