@@ -797,6 +797,13 @@ body.connector-enhanced .card-border-svg {
   box-shadow: 0 20px 60px rgba(0, 0, 0, 0.15);
 }
 
+.why-choose-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
 @media (max-width: 767px) {
   .why-choose-image {
     height: 300px;
@@ -814,6 +821,16 @@ body.connector-enhanced .card-border-svg {
   display: flex;
   flex-direction: column;
   gap: 24px;
+}
+
+.why-choose-label {
+  display: inline-block;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--orange);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 8px;
 }
 
 @media (max-width: 767px) {
